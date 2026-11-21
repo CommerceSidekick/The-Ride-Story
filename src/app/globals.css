@@ -144,3 +144,16 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 
 .site .tilt { transform: rotate(-2.2deg); }
 .site .tilt-r { transform: rotate(2deg); }
+
+/* Photo pins on the 3D map */
+.trs-pin {
+  width: 42px; height: 42px; border-radius: 999px; border: 2.5px solid #f2eee6; background: #1c1e1a center/cover no-repeat;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.55); cursor: pointer; transition: transform 300ms cubic-bezier(.2,.8,.2,1), border-color 300ms; transform-origin: bottom center;
+}
+.trs-pin::after { content: ""; position: absolute; left: 50%; bottom: -9px; width: 2px; height: 8px; background: #f2eee6; transform: translateX(-50%); }
+.trs-pin.is-active { transform: scale(1.55); border-color: #e8862a; z-index: 5; }
+.trs-pin.is-active::after { background: #e8862a; }
+.maplibregl-ctrl-attrib { font-size: 10px !important; background: rgba(14,15,12,0.6) !important; color: #a8a291 !important; }
+.maplibregl-ctrl-attrib a { color: #f2eee6 !important; }
+.maplibregl-ctrl-group { background: rgba(14,15,12,0.75) !important; }
+.maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(1); }

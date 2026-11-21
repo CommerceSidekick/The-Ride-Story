@@ -134,3 +134,26 @@ export function boundsOf(tracks: TrackPoint[][]): Bounds | null {
   }
   return Number.isFinite(minLat) ? { minLat, maxLat, minLon, maxLon } : null;
 }
+
+/** Compass bearing (degrees) of travel along the track around a given distance (km). */
+export function bearingAt(points: TrackPoint[], cum: number[], km: number, spanKm = 0.6) {
+  if (points.length < 2) return 0;
+  const idx = (k: number) => {
+    let lo = 0, hi = cum.length - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (cum[m] < k) lo = m; else hi = m; }
+    return hi;
+  };
+  const a = points[idx(Math.max(0, km - spanKm / 2))];
+  const b = points[idx(Math.min(cum[cum.length - 1], km + spanKm / 2))];
+  const φ1 = (a[0] * Math.PI) / 180, φ2 = (b[0] * Math.PI) / 180, Δλ = ((b[1] - a[1]) * Math.PI) / 180;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  return ((Math.atan2(y, x) * 180) / Math.PI + 360) % 360;
+}
+
+/** Overall heading from start to end, used to look "up the route" when framing a whole day. */
+export function overallBearing(points: TrackPoint[]) {
+  if (points.length < 2) return 0;
+  const cum = cumulativeKm(points);
+  return bearingAt(points, cum, cum[cum.length - 1] / 2, cum[cum.length - 1]);
+}

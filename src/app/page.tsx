@@ -8,41 +8,44 @@ const Arr = () => <span className="arr" aria-hidden>→</span>;
 
 const STORIES = [
   {
-    id: "battle",
+    id: "solo",
     n: "01",
-    kicker: "The personal battle",
-    title: ["March: walked it.", "June: cleaned it."],
+    kicker: "Solo rides",
+    title: ["Progress you", "can see."],
     photo: "/photos/battle.jpg",
     alt: "A lone rider silhouetted against a sunrise",
-    body: "The climb that beat you all spring. The first 100 km. The comeback after the crash. Your ride data already holds the story of a fitness fight — we find the turning points, put your photos next to them, and show you how far you've come.",
-    gets: ["Before-and-after on the climbs that matter", "A season story built from your own rides", "A post that says it better than a screenshot"],
+    strip: "Progress you earned, ride by ride.",
+    body: "The climb you couldn't clear in spring. Your first hundred kilometres. The ride back after an injury. We line your rides up over time, pair them with the photos you took, and show how far you've come.",
+    gets: ["Your rides on one map, over a season", "The climbs that changed, side by side", "A post that's more than a screenshot"],
   },
   {
-    id: "saturday",
+    id: "group",
     n: "02",
-    kicker: "The Saturday ride",
-    title: ["Same loop.", "Different story every week."],
+    kicker: "Group rides",
+    title: ["Same loop,", "new story."],
     photo: "/photos/crew.jpg",
     alt: "A group of mountain bikers regrouping on a trail above a valley",
-    body: "Coffee at seven, wheels at eight, someone's flat by nine. Everyone's photos land in one place, the ride gets mapped once, and the crew gets a recap with the numbers, the shots and the awards — before the coffee's cold.",
-    gets: ["One shared ride, everyone's photos", "Crew stats and awards — Mountain Goat, Brakes Optional", "A carousel ready for the group chat"],
+    strip: "The weekly loop, everyone's photos together.",
+    body: "The weekly ride with friends is the one you'll remember least, because it happens so often. Everyone's photos land in one place, the route is mapped once, and the group gets a recap worth opening.",
+    gets: ["Everyone's photos, one ride", "Each rider's numbers, without the spreadsheet", "A carousel ready for the group chat"],
   },
   {
     id: "trip",
     n: "03",
-    kicker: "The big trip",
-    title: ["Seven days. Four riders.", "900 photos. One book."],
+    kicker: "Trips",
+    title: ["A week", "worth keeping."],
     photo: "/photos/trip.jpg",
     alt: "A mountain biker descending a gravel road through alpine meadows",
-    body: "Oaxaca, Moab, the Alps. A week of riding becomes a chapter for every day: the route, the elevation, where every photo was taken, and what really happened — told in your words and printed as a book you'll keep.",
-    gets: ["A printed storybook with maps and elevation", "A post for every day of the trip", "A shareable online edition with the clips"],
+    strip: "A week of riding, told day by day.",
+    body: "Oaxaca, Moab, the Alps. Each day becomes a chapter: the route on a 3D map, the climbs, where every photo was taken, and what happened — in your words. Read it online, or print it as a book.",
+    gets: ["An online story, photos over a 3D map of the ride", "A printed book with maps and elevation", "A post for every day of the trip"],
   },
 ];
 
 const STEPS = [
   ["01", "Connect", "Connect Strava, or drop in the ride files from your Garmin, Wahoo or Coros. Every rider brings their own."],
   ["02", "Upload", "Photos and clips from every phone in the crew. We pin each shot to the exact spot on the trail where it was taken."],
-  ["03", "Tell it", "We draft the story — maps, numbers, the moments that mattered. You add what really happened. Then print it, post it, share it."],
+  ["03", "Tell it", "We draft the story — maps, numbers, the moments that stood out. You add what happened. Then read it online, print it, or post it."],
 ];
 
 const DETAILS = [
@@ -64,12 +67,12 @@ export default function Home() {
         <Image src="/photos/hero.jpg" alt="A mountain biker silhouetted on a ridge under a dramatic sky" fill priority sizes="100vw" className="object-cover object-[60%_center]" />
         <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(14,15,12,0.92) 0%, rgba(14,15,12,0.6) 45%, rgba(14,15,12,0.15) 100%), linear-gradient(0deg, rgba(14,15,12,1) 0%, rgba(14,15,12,0.35) 45%, rgba(14,15,12,0) 70%)" }} />
         <div className="wrap relative pb-16 pt-40 md:pb-24">
-          <div className="x-eyebrow">The battle · The Saturday crew · The big trip</div>
+          <div className="x-eyebrow">Ride stories, books and posts</div>
           <h1 className="x-display mt-6 max-w-[11ch]">
             Every ride <br />has a <span className="x-flame">story.</span>
           </h1>
           <p className="x-lead mt-8 max-w-[40ch] text-[#f2eee6]/85">
-            Whether it&apos;s a personal fitness battle, a Saturday ride with friends, or a week-long trip — connect your Strava, upload your pictures, and we&apos;ll help you capture and tell the story.
+            A hard-won climb, a Saturday loop with friends, a week in the mountains. Connect Strava, add your photos, and we&apos;ll help you capture the ride and tell its story.
           </p>
           <div className="mt-10 flex flex-wrap gap-4">
             <Link href="/app" className="s-btn">Start your story <Arr /></Link>
@@ -85,30 +88,17 @@ export default function Home() {
             <a key={s.id} href={`#${s.id}`} className={`group block py-8 md:px-8 ${i ? "border-t border-[#2e312b] md:border-l md:border-t-0" : "md:pl-0"}`}>
               <div className="x-mono text-[0.8rem] text-[#e8862a]">{s.n}</div>
               <div className="x-h3 mt-2 transition group-hover:text-[#e8862a]">{s.kicker}</div>
-              <div className="x-muted mt-1 text-[0.95rem]">{s.title.join(" ")}</div>
+              <div className="x-muted mt-1 text-[0.95rem]">{s.strip}</div>
             </a>
           ))}
         </div>
       </section>
 
-      {/* ─────────── Marquee ─────────── */}
-      <div className="marquee" aria-hidden>
-        <div className="marquee-track x-h2 !text-[clamp(1.6rem,3.4vw,2.6rem)]">
-          {[0, 1].map((k) => (
-            <span key={k} className="inline-flex gap-10">
-              {["The climb", "The crash", "The send", "The regroup", "The tacos", "The view", "The comeback", "The long way home"].map((w, i) => (
-                <span key={w} className={i % 2 ? "x-outline" : ""}>{w} <span className="x-flame">/</span></span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* ─────────── Manifesto ─────────── */}
       <section className="sec">
         <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-end">
           <Reveal>
-            <div className="x-eyebrow">Why we exist</div>
+            <div className="x-eyebrow">Why we built it</div>
             <h2 className="x-h2 mt-5">
               Your data says <span className="x-outline">what</span> happened.<br />
               Your story says <span className="x-flame">why it mattered.</span>
@@ -116,7 +106,7 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <p className="x-lead x-muted max-w-[46ch]">
-              A ride ends up scattered — a file on Strava, 400 photos across five phones, a group chat full of &ldquo;send me that one.&rdquo; The moments that made it worth doing get lost in the pile. The Ride Story puts it all back together and turns it into something you&apos;ll actually keep.
+              After a ride, the pieces scatter: a file on Strava, photos across five phones, a group chat asking for &ldquo;that one of me on the descent.&rdquo; The Ride Story puts them back together, in order and in place, so the ride becomes something you keep.
             </p>
           </Reveal>
         </div>
@@ -159,7 +149,7 @@ export default function Home() {
         <div className="wrap">
           <Reveal>
             <div className="x-eyebrow">How it works</div>
-            <h2 className="x-h2 mt-5 max-w-[16ch]">You ride. <span className="x-outline">We find the story.</span></h2>
+            <h2 className="x-h2 mt-5 max-w-[16ch]">You ride. <span className="x-outline">We do the sorting.</span></h2>
           </Reveal>
           <div className="mt-16 grid gap-px overflow-hidden rounded-[4px] bg-[#d8d1c2] md:grid-cols-3">
             {STEPS.map(([n, t, d], i) => (
@@ -185,8 +175,8 @@ export default function Home() {
         <div className="absolute inset-0 bg-[#0e0f0c]/60" />
         <div className="wrap sec relative text-center">
           <Reveal>
-            <p className="x-display !text-[clamp(2.6rem,8vw,7.5rem)]">
-              Ride it.<br /><span className="x-outline">Remember it.</span><br /><span className="x-flame">Tell it.</span>
+            <p className="x-h2 mx-auto max-w-[18ch]">
+              The ride ends.<br /><span className="x-flame">The story doesn&apos;t have to.</span>
             </p>
           </Reveal>
         </div>
@@ -198,16 +188,16 @@ export default function Home() {
           <Reveal className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
             <div>
               <div className="x-eyebrow">What you get</div>
-              <h2 className="x-h2 mt-5">A book to keep.<br /><span className="x-flame">Posts to share tonight.</span></h2>
+              <h2 className="x-h2 mt-5">A story to read.<br /><span className="x-flame">A book to keep.</span></h2>
             </div>
-            <p className="x-lead x-muted max-w-[46ch]">One upload, three ways to tell it. Every page and every slide is built from your rides and your photos — and every word is yours to change.</p>
+            <p className="x-lead x-muted max-w-[46ch]">One set of rides and photos, told three ways. Everything is built from what you recorded and shot — and every word is yours to change.</p>
           </Reveal>
 
           <div className="mt-16 grid gap-6 lg:grid-cols-[1.35fr_1fr]">
             <Reveal className="on-ridge relative overflow-hidden rounded-[4px] p-6 md:p-10">
               <div className="x-mono text-[0.8rem] text-[#e8862a]">01 · The storybook</div>
-              <div className="x-h3 mt-2">Printed. Hardcover-ready. Yours.</div>
-              <p className="x-muted mt-2 max-w-[44ch] text-[0.98rem]">Cover, the route of every day, elevation, the crew, your best shots and your words. Export at 10×8 in, 8×8 in or A4.</p>
+              <div className="x-h3 mt-2">A printed book.</div>
+              <p className="x-muted mt-2 max-w-[44ch] text-[0.98rem]">Cover, the route of every day, elevation, your best shots and your words. Print-ready files for Lulu, Blurb, Prodigi and other photo-book printers.</p>
               <div className="relative mt-8 h-[300px] sm:h-[380px]">
                 <Image src="/marketing/book-day.jpg" alt="A storybook page showing a day's route map, stats and elevation" width={1400} height={1120} className="tilt-r absolute right-0 top-6 w-[72%] rounded-[3px] shadow-2xl shadow-black/60" />
                 <Image src="/marketing/book-cover.jpg" alt="A storybook cover with a mountain bike photo and the trip title" width={1400} height={1120} className="tilt absolute left-0 top-0 w-[64%] rounded-[3px] shadow-2xl shadow-black/70" />
@@ -216,7 +206,7 @@ export default function Home() {
             <div className="grid gap-6">
               <Reveal delay={100} className="on-ridge overflow-hidden rounded-[4px] p-6 md:p-8">
                 <div className="x-mono text-[0.8rem] text-[#e8862a]">02 · The post set</div>
-                <div className="x-h3 mt-2">Instagram & Facebook, sized and captioned.</div>
+                <div className="x-h3 mt-2">Posts, sized and captioned.</div>
                 <div className="mt-6 flex gap-3">
                   {["ig-cover", "ig-map", "ig-stats"].map((f) => (
                     <Image key={f} src={`/marketing/${f}.jpg`} alt="" width={540} height={675} className="w-1/3 rounded-[3px]" />
@@ -224,9 +214,9 @@ export default function Home() {
                 </div>
               </Reveal>
               <Reveal delay={180} className="on-ridge overflow-hidden rounded-[4px] p-6 md:p-8">
-                <div className="x-mono text-[0.8rem] text-[#e8862a]">03 · The online edition</div>
-                <div className="x-h3 mt-2">One link for everyone who wasn&apos;t there.</div>
-                <p className="x-muted mt-2 text-[0.98rem]">The full story on any phone, clips included. Private until you share it.</p>
+                <div className="x-mono text-[0.8rem] text-[#e8862a]">03 · The online story</div>
+                <div className="x-h3 mt-2">Photos over a 3D map of the ride.</div>
+                <p className="x-muted mt-2 text-[0.98rem]">Scroll through each day as the map follows the route. One private link for everyone who wasn&apos;t there.</p>
               </Reveal>
             </div>
           </div>
@@ -241,14 +231,14 @@ export default function Home() {
               <Image src="/photos/singletrack.jpg" alt="Riders following each other down forest singletrack" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
             </div>
             <div className="absolute -bottom-6 -right-2 rounded-[4px] bg-[#e8862a] px-6 py-5 text-[#0e0f0c] md:-right-8">
-              <div className="x-mono text-[0.72rem] uppercase tracking-[0.14em]">Mountain goat</div>
-              <div className="x-h3 mt-1">Maya · 2,940 m</div>
+              <div className="x-mono text-[0.72rem] uppercase tracking-[0.14em]">Day 2 · La Cumbre</div>
+              <div className="x-h3 mt-1">16.6 km · 1,328 m down</div>
             </div>
           </Reveal>
           <Reveal delay={100}>
-            <div className="x-eyebrow">Better with the crew</div>
-            <h2 className="x-h2 mt-5">One link.<br /><span className="x-outline">Everyone&apos;s photos.</span><br /><span className="x-flame">One story.</span></h2>
-            <p className="x-lead x-muted mt-6 max-w-[46ch]">Send the crew a link. Everyone adds their own rides and photos from their own phone. We merge the duplicate recordings, sort it all by day, and hand out the awards nobody asked for but everybody wants.</p>
+            <div className="x-eyebrow">Riding with others</div>
+            <h2 className="x-h2 mt-5">Everyone&apos;s photos.<br /><span className="x-flame">One story.</span></h2>
+            <p className="x-lead x-muted mt-6 max-w-[46ch]">Send one link. Each rider adds their own rides and photos from their own phone. We merge the duplicate recordings, sort everything by day, and credit every photo to whoever took it.</p>
             <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-[4px] bg-[#2e312b]">
               {DETAILS.map(([t, d]) => (
                 <div key={t} className="bg-[#1c1e1a] p-5">

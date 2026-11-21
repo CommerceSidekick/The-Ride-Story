@@ -12,7 +12,7 @@ export function SiteFooter() {
           </div>
           {[
             ["Product", [["#how", "How it works"], ["#what-you-get", "What you get"], ["/app", "Start your story"]]],
-            ["Stories", [["#battle", "The personal battle"], ["#saturday", "The Saturday ride"], ["#trip", "The big trip"]]],
+            ["Stories", [["#solo", "Solo rides"], ["#group", "Group rides"], ["#trip", "Trips"]]],
             ["Company", [["mailto:hello@theridestory.com", "hello@theridestory.com"], ["/app", "Sign in"]]],
           ].map(([title, links]) => (
             <div key={title as string}>
