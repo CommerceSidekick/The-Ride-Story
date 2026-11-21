@@ -113,7 +113,7 @@ export function SocialTab({ ws }: { ws: Workspace }) {
           <div className="mt-1 text-sm text-dust">{set.posts.length} posts · {set.posts.reduce((n, p) => n + p.slides.length, 0)} images</div>
           <div className="mt-4">{settings}</div>
           <button className="btn btn-ghost mt-4 w-full justify-center" onClick={generate}>Rebuild from settings</button>
-          <p className="mt-3 text-xs leading-relaxed text-dust">Trailbound makes the images and captions; you post them. On a phone, <b>Share</b> hands the images to Instagram or Facebook and copies the caption.</p>
+          <p className="mt-3 text-xs leading-relaxed text-dust">The Ride Story makes the images and captions; you post them. On a phone, <b>Share</b> hands the images to Instagram or Facebook and copies the caption.</p>
         </div>
       </aside>
       <div className="min-w-0 space-y-6">

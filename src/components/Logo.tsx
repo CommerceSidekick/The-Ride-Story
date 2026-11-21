@@ -14,8 +14,8 @@ export function Logo({ size = 28, className = "" }: { size?: number; className?:
   return (
     <span className={`inline-flex items-center gap-2 ${className}`}>
       <Mark size={size} />
-      <span className="font-display font-semibold tracking-tight" style={{ fontSize: size * 0.78 }}>
-        trailbound
+      <span className="font-display font-semibold tracking-tight" style={{ fontSize: size * 0.74 }}>
+        The Ride Story
       </span>
     </span>
   );

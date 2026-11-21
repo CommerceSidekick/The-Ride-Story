@@ -371,7 +371,7 @@ function Body({ page, ctx }: { page: BookPage; ctx: PageCtx }) {
             )}
           </div>
           <div className="tb-kicker pointer-events-none absolute inset-x-0 text-center" style={{ bottom: u(3), fontSize: u(0.8), color: m ? "#f3eee4" : "var(--pg-mute)", opacity: 0.7 }}>
-            made with trailbound
+            theridestory.com
           </div>
         </>
       );

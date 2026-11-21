@@ -109,7 +109,7 @@ export function SlideView({ slide, ctx, className = "", style }: { slide: Slide;
         {photoEl(0.68)}
         <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center" style={{ padding: u(9), color: "#f3eee4" }}>
           <Editable editable={editable} value={slide.text ?? ""} onChange={(text) => onEdit?.({ text })} className="tb-display pointer-events-auto" style={{ fontSize: u(7.5), lineHeight: 1.15 }} />
-          <div className="tb-kicker" style={{ fontSize: u(2), marginTop: u(6), opacity: 0.75 }}>made with trailbound</div>
+          <div className="tb-kicker" style={{ fontSize: u(2), marginTop: u(6), opacity: 0.75 }}>theridestory.com</div>
         </div>
       </>
     );

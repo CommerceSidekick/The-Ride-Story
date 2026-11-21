@@ -1,4 +1,4 @@
--- Trailbound schema. Run once in the Supabase SQL editor (or `supabase db push`).
+-- The Ride Story schema. Run once in the Supabase SQL editor (or `supabase db push`).
 
 create table if not exists public.trips (
   id uuid primary key,

@@ -25,7 +25,7 @@ export default function PublishedBook() {
         <div>
           <p className="font-display text-3xl font-semibold">This book isn&apos;t published</p>
           <p className="mt-2 text-sm text-dust">The link may be wrong, or the owner unpublished it.</p>
-          <Link href="/" className="btn btn-primary mt-5">Trailbound home</Link>
+          <Link href="/" className="btn btn-primary mt-5">The Ride Story home</Link>
         </div>
       </div>
     );

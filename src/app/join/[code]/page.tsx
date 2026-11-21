@@ -12,7 +12,7 @@ export default function JoinPage() {
         <div>
           <p className="font-display text-2xl font-semibold">Invites aren&apos;t available here</p>
           <p className="mt-1 max-w-sm text-sm text-dust">This deployment runs in local mode, where trips live in one browser. Invites work once the cloud backend is connected.</p>
-          <Link href="/app" className="btn btn-dark mt-4">Open Trailbound</Link>
+          <Link href="/app" className="btn btn-dark mt-4">Open The Ride Story</Link>
         </div>
       </div>
     );

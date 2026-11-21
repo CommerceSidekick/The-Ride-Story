@@ -7,9 +7,10 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axes: ["opsz", "SOFT"] });
 
 export const metadata: Metadata = {
-  title: "Trailbound — your ride trip, bound into a story",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://theridestory.com"),
+  title: "The Ride Story — turn your ride trip into a storybook",
   description:
-    "Everyone drops in their photos, videos and ride files. Trailbound turns the trip into a printable storybook and a ready-to-post set for Instagram and Facebook.",
+    "Everyone drops in their photos, videos and ride files. The Ride Story turns the trip into a printable storybook and a ready-to-post set for Instagram and Facebook.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

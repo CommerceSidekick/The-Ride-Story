@@ -3,7 +3,7 @@ import { Logo } from "@/components/Logo";
 
 const STEPS = [
   ["01", "Everyone drops their stuff in", "Photos, videos, and ride files from Strava, Garmin, Wahoo or Coros. One trip, one link, the whole crew."],
-  ["02", "Trailbound finds the story", "It sorts by day, pins every photo to the exact spot on the trail it was taken, merges duplicate recordings of the same ride, and works out the numbers."],
+  ["02", "We find the story", "It sorts by day, pins every photo to the exact spot on the trail it was taken, merges duplicate recordings of the same ride, and works out the numbers."],
   ["03", "You get a book and a post set", "A print-ready storybook with maps, elevation and your words. Plus sized-and-captioned posts for Instagram and Facebook."],
 ];
 
@@ -35,10 +35,10 @@ export default function Home() {
             <h1 className="mt-4 font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-7xl">
               The trip was epic.
               <br />
-              <span className="text-marigold">Now bind it.</span>
+              <span className="text-marigold">Now tell the story.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-bone/75">
-              Trailbound gathers everyone&apos;s photos, clips and ride files from a mountain bike trip and turns them into a storybook you can print — and a set of posts you can share tonight.
+              The Ride Story gathers everyone&apos;s photos, clips and ride files from a mountain bike trip and turns them into a storybook you can print — and a set of posts you can share tonight.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/app" className="btn btn-primary !px-6 !py-3 !text-base">Start a trip</Link>
@@ -75,9 +75,9 @@ export default function Home() {
       </section>
 
       <section className="mx-auto max-w-6xl px-5 py-20 text-center">
-        <h2 className="font-display text-4xl font-semibold tracking-tight">Your next trip deserves a spine.</h2>
+        <h2 className="font-display text-4xl font-semibold tracking-tight">Every ride trip has a story. Tell yours.</h2>
         <Link href="/app" className="btn btn-dark mt-6 !px-6 !py-3 !text-base">Start a trip</Link>
-        <p className="mt-10 text-xs text-dust">Trailbound reads ride files you export yourself. It is not affiliated with Strava, Garmin, Wahoo, Coros, Instagram or Facebook.</p>
+        <p className="mt-10 text-xs text-dust">The Ride Story reads ride files you export yourself. It is not affiliated with Strava, Garmin, Wahoo, Coros, Instagram or Facebook.</p>
       </section>
     </main>
   );

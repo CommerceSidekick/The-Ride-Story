@@ -1,7 +1,7 @@
-# Trailbound
+# The Ride Story
 
-**Your ride trip, bound into a story.** Everyone on a mountain bike trip drops in their photos, videos and ride
-files. Trailbound sorts them by day, pins each photo to the spot on the trail where it was taken, and produces:
+**[theridestory.com](https://theridestory.com) — every ride trip has a story. Tell it.** Everyone on a mountain bike trip drops in their photos, videos and ride
+files. The Ride Story sorts them by day, pins each photo to the spot on the trail where it was taken, and produces:
 
 - a **storybook** (cover, trip map, a chapter per day with route art, elevation profile, stats, photos and text,
   crew page with awards, "by the numbers") that exports as a print-ready PDF or publishes as a link, and
@@ -35,7 +35,7 @@ Nothing joins **group collection + ride data + book + social** in one place. Tha
 - **Drafts first, then your words.** Text starts from facts in the data in one of three voices; every line is
   click-to-edit. An optional AI writer weaves in the notes you type for each day.
 - **Export, don't auto-post.** Posting to Instagram/Facebook by API requires Meta app review and business
-  accounts. Trailbound makes the images and captions; on a phone, Share hands them to the app.
+  accounts. The Ride Story makes the images and captions; on a phone, Share hands them to the app.
 
 ## Run it
 
@@ -58,7 +58,9 @@ from generated data.
    `https://<your-domain>/**` to Redirect URLs (sign-in is by email magic link).
 3. Import this repo into Vercel (framework: Next.js, no extra settings) and set the variables from
    `.env.example`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and optionally
-   `ANTHROPIC_API_KEY`.
+   `ANTHROPIC_API_KEY`. Set `NEXT_PUBLIC_SITE_URL=https://theridestory.com` for share previews.
+4. Vercel → Project → Domains: add `theridestory.com` and `www.theridestory.com`, then point the domain's DNS
+   at Vercel as the Domains page instructs.
 
 With Supabase configured the app switches to **cloud mode**: sign-in, invite links (`/join/<code>`) so each rider
 uploads from their own phone, and public book links (`/b/<slug>`) that work for anyone.
