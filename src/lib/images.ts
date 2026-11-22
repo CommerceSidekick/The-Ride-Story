@@ -59,7 +59,7 @@ export async function ingestPhoto(file: File): Promise<Ingested> {
   }
   if (meta.takenLocalMs == null && meta.takenUtcMs == null && file.lastModified) meta.takenUtcMs = file.lastModified;
   const bmp = await decode(file);
-  const display = drawScaled(bmp, bmp.width, bmp.height, 2400);
+  const display = drawScaled(bmp, bmp.width, bmp.height, 3600); // 300 dpi across a 12 in page
   const thumb = drawScaled(bmp, bmp.width, bmp.height, 640);
   meta.w = display.width;
   meta.h = display.height;

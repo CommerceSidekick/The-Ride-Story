@@ -120,6 +120,7 @@ function TripWorkspace() {
           </nav>
           <div className="ml-auto flex items-center gap-3">
             <span className={cx("text-xs", saveState === "saved" || saveState === "saving" ? "text-dust" : "font-semibold text-clay")}>{saveState === "saved" ? "Saved" : saveState === "saving" ? "Saving…" : saveState}</span>
+            <Link className="btn btn-ghost btn-sm" href={`/app/trip/${id}/story`}>Preview story</Link>
             <button className="btn btn-primary btn-sm" onClick={() => setShare(true)}>Share</button>
             <span className="hidden md:block"><AccountChip /></span>
           </div>
@@ -150,24 +151,24 @@ function TripWorkspace() {
               <p className="mt-1 text-sm text-dust">Invites need the cloud backend, which isn&apos;t configured on this deployment. Until then, collect everyone&apos;s files on this device and pick the rider in “Adding as”.</p>
             )}
 
-            <div className="label mt-6">Publish the book online</div>
-            {!trip.book ? (
-              <p className="mt-1 text-sm text-dust">Build the book first (Book tab), then publish it here.</p>
+            <div className="label mt-6">Publish the story online</div>
+            {rides.length + media.length === 0 ? (
+              <p className="mt-1 text-sm text-dust">Add rides and photos first, then publish the story here.</p>
             ) : publishedUrl ? (
               <>
                 <p className="mt-1 text-sm text-dust">
-                  {cloudEnabled ? "Anyone with this link can read the book and watch the clips. No sign-in needed." : "Local mode: this link only works in this browser. With the cloud backend it works for everyone."}
+                  {cloudEnabled ? "Anyone with this link can scroll through the story over the 3D map, watch the clips and read the book. No sign-in needed." : "Local mode: this link only works in this browser. With the cloud backend it works for everyone."}
                 </p>
                 <CopyRow value={publishedUrl} />
                 <div className="mt-3 flex gap-2">
-                  <a className="btn btn-dark btn-sm" href={publishedUrl} target="_blank" rel="noreferrer">Open book</a>
+                  <a className="btn btn-dark btn-sm" href={publishedUrl} target="_blank" rel="noreferrer">Open story</a>
                   <button className="btn btn-ghost btn-sm" onClick={() => updateTrip({ publishedSlug: null })}>Unpublish</button>
                 </div>
               </>
             ) : (
               <>
-                <p className="mt-1 text-sm text-dust">Creates a private-by-link web version. The printed book&apos;s back cover gets a QR code pointing to it.</p>
-                <button className="btn btn-primary mt-3" onClick={() => updateTrip({ publishedSlug: `${slugify(trip.name) || "trip"}-${shortCode(6)}` })}>Publish book</button>
+                <p className="mt-1 text-sm text-dust">Creates a private-by-link story: your photos over a 3D map of the rides, plus the book if you&apos;ve made one. The printed book&apos;s back cover gets a QR code pointing to it.</p>
+                <button className="btn btn-primary mt-3" onClick={() => updateTrip({ publishedSlug: `${slugify(trip.name) || "trip"}-${shortCode(6)}` })}>Publish story</button>
               </>
             )}
 

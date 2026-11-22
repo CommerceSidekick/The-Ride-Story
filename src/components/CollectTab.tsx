@@ -4,6 +4,7 @@ import type { Analysis, Day, MediaX } from "@/lib/analyze";
 import { dayTitle } from "@/lib/copy";
 import { importFiles, offsetFromLon } from "@/lib/ingest";
 import { cloudEnabled, store } from "@/lib/store";
+import { StravaPanel } from "./StravaPanel";
 import type { Media, Ride, Trip } from "@/lib/types";
 import { RIDER_COLORS, cx, fmtDate, fmtDist, fmtDuration, fmtEle, fmtTime, uid } from "@/lib/util";
 
@@ -127,6 +128,14 @@ export function CollectTab({ ws }: { ws: Workspace }) {
             <ul className="mt-1 list-disc pl-5">{errors.slice(0, 6).map((e) => <li key={e}>{e}</li>)}</ul>
           </div>
         )}
+
+        <StravaPanel
+          startDate={a.startDate}
+          endDate={a.endDate}
+          rides={ws.rides}
+          units={trip.units}
+          onReturn={`/app/trip/${trip.id}?tab=collect`}
+        />
 
         {empty && (
           <details className="card mt-5 p-5 text-sm" open>

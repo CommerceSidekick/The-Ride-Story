@@ -1,22 +1,30 @@
-/** Mark: an open book whose gutter is a switchback trail climbing to a summit dot. */
-export function Mark({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 48 48" fill="none" aria-hidden>
-      <rect width="48" height="48" rx="11" fill="#e8862a" />
-      <path d="M8 13.5c5-2 10-2 16 1 6-3 11-3 16-1v22c-5-2-10-2-16 1-6-3-11-3-16-1z" fill="#1b1916" />
-      <path d="M14 31.5h13.5a3.2 3.2 0 0 0 0-6.4H20.5a3.2 3.2 0 0 1 0-6.4H31" stroke="#f3eee4" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="34.2" cy="18.7" r="2.4" fill="#e8862a" />
-    </svg>
-  );
+/**
+ * The Ride Story logo, drawn from the supplied artwork as a mask so it takes the current text colour
+ * (bone on dark backgrounds, carbon on light ones).
+ */
+const maskStyle = (src: string, w: number, h: number): React.CSSProperties => ({
+  display: "inline-block",
+  width: w,
+  height: h,
+  backgroundColor: "currentColor",
+  WebkitMaskImage: `url(${src})`,
+  maskImage: `url(${src})`,
+  WebkitMaskRepeat: "no-repeat",
+  maskRepeat: "no-repeat",
+  WebkitMaskSize: "contain",
+  maskSize: "contain",
+  WebkitMaskPosition: "center",
+  maskPosition: "center",
+  flexShrink: 0,
+});
+
+/** The peak mark alone. `size` is its height in px; it is twice as wide as it is tall. */
+export function Mark({ size = 28, className = "" }: { size?: number; className?: string }) {
+  return <span role="img" aria-label="The Ride Story" className={className} style={maskStyle("/brand/mark.png", size * 2, size)} />;
 }
 
+/** Full lockup: mark + wordmark. `size` is the overall height in px. */
 export function Logo({ size = 28, className = "" }: { size?: number; className?: string }) {
-  return (
-    <span className={`inline-flex items-center gap-2 ${className}`}>
-      <Mark size={size} />
-      <span className="font-display font-semibold tracking-tight" style={{ fontSize: size * 0.74 }}>
-        The Ride Story
-      </span>
-    </span>
-  );
+  const h = Math.round(size * 0.62);
+  return <span role="img" aria-label="The Ride Story" className={className} style={maskStyle("/brand/lockup.png", Math.round((h * 1812) / 173), h)} />;
 }

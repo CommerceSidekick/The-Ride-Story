@@ -6,6 +6,8 @@ import { cx, fmtDist, fmtDuration, fmtEle, uid } from "@/lib/util";
 import { BookPageView } from "./BookPageView";
 import type { Workspace } from "./CollectTab";
 import { PhotoPicker } from "./PhotoPicker";
+import { Map3dCapture } from "./Map3dCapture";
+import { PrintPanel } from "./PrintPanel";
 
 export const THEMES: { id: BookTheme; label: string; bg: string; accent: string }[] = [
   { id: "loam", label: "Loam", bg: "#1b1916", accent: "#e8862a" },
@@ -21,6 +23,7 @@ export function BookTab({ ws, publishedUrl }: { ws: Workspace; publishedUrl: str
   const book = trip.book;
   const [config, setConfig] = useState<BookConfig>(book?.config ?? DEFAULT_BOOK);
   const [picker, setPicker] = useState<{ pageId: string; slot: number } | null>(null);
+  const [capturing, setCapturing] = useState(false);
   const [ai, setAi] = useState<{ enabled: boolean; busy: boolean; msg: string }>({ enabled: false, busy: false, msg: "" });
   const size = SIZES[(book?.config ?? config).size];
   const hasContent = ws.rides.length + ws.media.length > 0;
@@ -113,18 +116,20 @@ export function BookTab({ ws, publishedUrl }: { ws: Workspace; publishedUrl: str
     <div className="print-root grid gap-6 lg:grid-cols-[280px_1fr]">
       <style>{printCss}</style>
       <aside className="no-print">
-        <div className="card sticky top-4 p-5">
+        <div className="card sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto p-5">
           <div className="label">Book</div>
           <div className="mt-1 text-sm text-dust">{book.pages.length} pages · {size.label}</div>
           <Settings config={config} onChange={(p) => ("theme" in p || "size" in p ? restyle(p) : setConfig({ ...config, ...p }))} className="mt-4" />
           <button className="btn btn-ghost mt-4 w-full justify-center" onClick={generate}>Rebuild from settings</button>
           {ai.enabled && <button className="btn btn-ghost mt-2 w-full justify-center" onClick={rewrite} disabled={ai.busy}>{ai.busy ? "Writing…" : "✦ Rewrite text with AI"}</button>}
           {ai.msg && <p className="mt-2 text-xs text-dust">{ai.msg}</p>}
-          <button className="btn btn-primary mt-2 w-full justify-center" onClick={() => window.print()}>Print / Save as PDF</button>
-          <p className="mt-3 text-xs leading-relaxed text-dust">
-            In the print dialog choose <b>Save as PDF</b>, margins <b>None</b>, and turn on <b>Background graphics</b>. The PDF is sized {size.label.replace(/ (landscape|square)/, "")} and can be uploaded to any photo-book printer.
-          </p>
+          {a.totals.outings > 0 && (
+            <button className="btn btn-ghost mt-2 w-full justify-center" onClick={() => setCapturing(true)} disabled={capturing}>
+              {ws.media.some((m) => m.generated === "map3d") ? "Re-render 3D map pages" : "Add 3D map pages"}
+            </button>
+          )}
           <p className="mt-3 text-xs text-dust">Click any text to edit it. Click any photo to swap it.</p>
+          <PrintPanel trip={trip} a={a} book={book} publishedUrl={publishedUrl} onSize={(sz) => restyle({ size: sz })} />
         </div>
       </aside>
 
@@ -149,6 +154,31 @@ export function BookTab({ ws, publishedUrl }: { ws: Workspace; publishedUrl: str
           </div>
         ))}
       </div>
+
+      {capturing && (
+        <Map3dCapture
+          trip={trip}
+          a={a}
+          existing={ws.media}
+          onCancel={() => setCapturing(false)}
+          onDone={(added) => {
+            setCapturing(false);
+            if (!added.length) return;
+            ws.setMedia((all) => [...all.filter((m) => m.generated !== "map3d" || added.some((x) => x.takenLocalMs === m.takenLocalMs) === false), ...added]);
+            // Put each day's 3D map right after that day's chapter page, replacing an earlier one.
+            const byDate = new Map(added.map((m) => [new Date(m.takenLocalMs!).toISOString().slice(0, 10), m]));
+            const pages: BookPage[] = [];
+            for (const p of book.pages) {
+              const isOldMap = p.type === "photos" && p.photoIds.length === 1 && ws.media.find((m) => m.id === p.photoIds[0])?.generated === "map3d";
+              if (isOldMap) continue;
+              pages.push(p);
+              const m = p.type === "day" && p.date ? byDate.get(p.date) : undefined;
+              if (m) pages.push({ id: uid(), type: "photos", date: p.date, photoIds: [m.id] });
+            }
+            setBook({ ...book, pages });
+          }}
+        />
+      )}
 
       {picker && (
         <PhotoPicker

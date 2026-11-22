@@ -36,6 +36,7 @@ export function Editable({
 }
 
 export function shotCaption(m: MediaX, trip: Trip) {
+  if (m.generated === "map3d") return [m.caption, "Imagery EOxCloudless 2016 (CC BY 4.0) · © OpenStreetMap contributors"].filter(Boolean).join(" · ");
   const who = trip.crew.find((c) => c.id === m.riderId)?.name;
   return [
     m.caption,
@@ -129,7 +130,7 @@ export function BookPageView({ page, ctx, className = "", style }: { page: BookP
       <div className="tb-surface">
         <Body page={page} ctx={ctx} />
         {ctx.pageNo != null && !["cover", "back"].includes(page.type) && !(page.type === "photos" && page.photoIds.length === 1) && (
-          <div className="tb-kicker absolute" style={{ right: u(3), bottom: u(1.5), fontSize: u(0.8), color: "var(--pg-mute)" }}>{ctx.pageNo}</div>
+          <div className="tb-kicker absolute" style={{ right: u(5), bottom: u(2.4), fontSize: u(0.8), color: "var(--pg-mute)" }}>{ctx.pageNo}</div>
         )}
       </div>
     </div>
@@ -273,7 +274,7 @@ function Body({ page, ctx }: { page: BookPage; ctx: PageCtx }) {
           </div>
           {main && (
             <div className="shrink-0" style={{ height: u(9), marginTop: u(3) }}>
-              <Elevation points={main.points} units={trip.units} marks={marks} className="h-full" />
+              <Elevation points={main.points} units={trip.units} marks={marks} theme={ctx.theme} className="h-full" />
             </div>
           )}
         </div>
@@ -288,7 +289,7 @@ function Body({ page, ctx }: { page: BookPage; ctx: PageCtx }) {
           <>
             <Shot m={m} trip={trip} onClick={pick(0)} caption="none" className="absolute inset-0 [&>div]:!rounded-none" />
             {m && (
-              <div className="tb-kicker pointer-events-none absolute inset-x-0 bottom-0" style={{ padding: `${u(5)} ${u(3)} ${u(2)}`, fontSize: u(0.95), color: "#f3eee4", background: "linear-gradient(to top, rgba(15,13,11,0.7), transparent)" }}>
+              <div className="tb-kicker pointer-events-none absolute inset-x-0 bottom-0" style={{ padding: `${u(5)} ${u(5)} ${u(4)}`, fontSize: u(0.95), color: "#f3eee4", background: "linear-gradient(to top, rgba(15,13,11,0.7), transparent)" }}>
                 {shotCaption(m, trip)}
               </div>
             )}
@@ -370,7 +371,7 @@ function Body({ page, ctx }: { page: BookPage; ctx: PageCtx }) {
               </div>
             )}
           </div>
-          <div className="tb-kicker pointer-events-none absolute inset-x-0 text-center" style={{ bottom: u(3), fontSize: u(0.8), color: m ? "#f3eee4" : "var(--pg-mute)", opacity: 0.7 }}>
+          <div className="tb-kicker pointer-events-none absolute inset-x-0 text-center" style={{ bottom: u(4.5), fontSize: u(0.8), color: m ? "#f3eee4" : "var(--pg-mute)", opacity: 0.7 }}>
             theridestory.com
           </div>
         </>

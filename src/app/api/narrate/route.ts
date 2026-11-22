@@ -42,11 +42,29 @@ export async function GET() {
   return Response.json({ enabled: Boolean(process.env.ANTHROPIC_API_KEY) });
 }
 
+const MAX_BODY = 120_000; // bytes; a 60-page book's facts fit comfortably
+
+/** Only this site's own pages may call the AI writer, so the key can't be used as a free proxy. */
+function sameOrigin(req: Request) {
+  const host = req.headers.get("host");
+  const origin = req.headers.get("origin") ?? req.headers.get("referer");
+  if (!host || !origin) return false;
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(req: Request) {
   if (!process.env.ANTHROPIC_API_KEY) return Response.json({ error: "AI writing is not configured on this deployment." }, { status: 501 });
+  if (!sameOrigin(req)) return Response.json({ error: "Forbidden" }, { status: 403 });
+  if (Number(req.headers.get("content-length") ?? 0) > MAX_BODY) return Response.json({ error: "Request too large" }, { status: 413 });
   let body: Body;
   try {
-    body = await req.json();
+    const raw = await req.text();
+    if (raw.length > MAX_BODY) return Response.json({ error: "Request too large" }, { status: 413 });
+    body = JSON.parse(raw);
   } catch {
     return Response.json({ error: "Invalid request" }, { status: 400 });
   }
