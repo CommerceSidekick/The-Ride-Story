@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://theridestory.com"),
   title: "The Ride Story — The ride was epic. We'll help tell the story.",
   description:
-    "MTB, cycling and moto. Connect Strava or any GPS, add your photos, and get an online story over a 3D map, posts for Instagram and Facebook, and a printed book. Digital stories are free.",
+    "MTB, cycling and moto. Connect Strava or any GPS, add your photos, and get an online story over a 3D map, posts for Instagram and Facebook, and a printed book. Your first story is free.",
   openGraph: { title: "The Ride Story — The ride was epic. We'll help tell the story.", images: ["/og.jpg"], siteName: "The Ride Story" },
   twitter: { card: "summary_large_image" },
 };
