@@ -45,8 +45,10 @@ async function setupContours(maplibregl: typeof import("maplibre-gl")) {
   return contourUrl;
 }
 
+const NO_PHOTOS: MapPhoto[] = [];
+
 export function TerrainMap({
-  tracks, photos = [], className = "", interactive = true, onReady, preserveDrawingBuffer = false, initialPitch = 52,
+  tracks, photos = NO_PHOTOS, className = "", interactive = true, onReady, preserveDrawingBuffer = false, initialPitch = 52, pixelRatio,
 }: {
   tracks: MapTrack[];
   photos?: MapPhoto[];
@@ -55,6 +57,7 @@ export function TerrainMap({
   onReady?: (c: MapController) => void;
   preserveDrawingBuffer?: boolean;
   initialPitch?: number;
+  pixelRatio?: number;
 }) {
   const el = useRef<HTMLDivElement>(null);
   const [err, setErr] = useState("");
@@ -82,6 +85,7 @@ export function TerrainMap({
           attributionControl: { compact: true },
           canvasContextAttributes: { preserveDrawingBuffer, antialias: true },
           fadeDuration: 200,
+          ...(pixelRatio ? { pixelRatio } : {}),
         });
         (window as unknown as { __trsMap?: MLMap }).__trsMap = map; // handy for debugging and automated checks
         if (interactive) map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), "top-right");

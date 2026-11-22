@@ -98,7 +98,7 @@ export function analyze(trip: Trip, rides: Ride[], media: Media[]): Analysis {
   };
   const timed = rides.filter((r) => r.startUtc > 0);
   for (const r of timed) slot(dayKey(r.startUtc + off)).rides.push(r);
-  for (const m of mx) if (m.date) slot(m.date).media.push(m);
+  for (const m of mx) if (m.date && !m.generated) slot(m.date).media.push(m);
   // Rides with no timestamps (planned routes) go on the first day so they still appear.
   const untimed = rides.filter((r) => !r.startUtc);
   if (untimed.length) {
@@ -143,7 +143,7 @@ export function analyze(trip: Trip, rides: Ride[], media: Media[]): Analysis {
     days: days.length,
     rideDays: rideDays.length,
     outings: sum(days.map((d) => d.groups.length)),
-    photos: media.filter((m) => m.kind === "photo" && !m.hidden).length,
+    photos: media.filter((m) => m.kind === "photo" && !m.hidden && !m.generated).length,
     videos: media.filter((m) => m.kind === "video" && !m.hidden).length,
   };
 
@@ -156,7 +156,7 @@ export function analyze(trip: Trip, rides: Ride[], media: Media[]): Analysis {
       movingSec: sum(own.map((r) => r.stats.movingSec)),
       maxSpeedKmh: own.length ? Math.max(...own.map((r) => r.stats.maxSpeedKmh)) : 0,
       rides: own.length,
-      photos: media.filter((m) => m.riderId === rider.id && !m.hidden).length,
+      photos: media.filter((m) => m.riderId === rider.id && !m.hidden && !m.generated).length,
     };
   });
 
@@ -175,7 +175,7 @@ export function analyze(trip: Trip, rides: Ride[], media: Media[]): Analysis {
 
   return {
     days,
-    undated: mx.filter((m) => !m.date),
+    undated: mx.filter((m) => !m.date && !m.generated),
     totals,
     riderStats,
     startDate: keys[0] ?? null,

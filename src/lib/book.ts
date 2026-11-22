@@ -6,8 +6,11 @@ import { fmtDate, uid } from "./util";
 export const DEFAULT_BOOK: BookConfig = { theme: "loam", size: "landscape", photosPerDay: 8, includeCrew: true, includeNumbers: true, tone: "stoked" };
 
 export const SIZES = {
-  landscape: { label: '10 × 8 in landscape', w: 10, h: 8 },
-  square: { label: '8 × 8 in square', w: 8, h: 8 },
+  landscape: { label: "10 × 8 in landscape", w: 10, h: 8 },
+  landscape11: { label: "11 × 8.5 in landscape", w: 11, h: 8.5 },
+  square: { label: "8 × 8 in square", w: 8, h: 8 },
+  square85: { label: "8.5 × 8.5 in square", w: 8.5, h: 8.5 },
+  square12: { label: "12 × 12 in square", w: 12, h: 12 },
   a4: { label: "A4 landscape", w: 11.69, h: 8.27 },
 } as const;
 
@@ -30,6 +33,8 @@ export function buildBook(trip: Trip, a: Analysis, config: BookConfig): Book {
       title: dayTitle(day, trip),
       text: dayText(day, trip, config.tone),
     }));
+    const map3d = [...a.mediaById.values()].find((m) => m.generated === "map3d" && m.date === day.date && !m.hidden);
+    if (map3d) pages.push(page({ type: "photos", date: day.date, photoIds: [map3d.id] }));
     const shots = pickPhotos(day.media, config.photosPerDay, used);
     let i = 0, r = day.index; // offset the rhythm per day so chapters don't all look alike
     if (note?.trim() && shots.length) {

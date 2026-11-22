@@ -48,6 +48,8 @@ export type Media = {
   starred: boolean;
   hidden: boolean;
   caption?: string;
+  /** Made by the app (e.g. a 3D map render), not uploaded by a rider. */
+  generated?: "map3d";
   /** Resolved at load time by the store. */
   url: string;
   thumbUrl: string;
@@ -55,7 +57,7 @@ export type Media = {
 };
 
 export type BookTheme = "loam" | "paper" | "agave";
-export type BookSize = "landscape" | "square" | "a4";
+export type BookSize = "landscape" | "landscape11" | "square" | "square85" | "square12" | "a4";
 
 export type PageType = "cover" | "overview" | "crew" | "day" | "photos" | "story" | "numbers" | "back";
 
