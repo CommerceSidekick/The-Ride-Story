@@ -8,13 +8,13 @@ import { cloudEnabled, store } from "@/lib/store";
 export default function JoinPage() {
   if (!cloudEnabled)
     return (
-      <div className="grid flex-1 place-items-center p-6 text-center">
+      <main className="grid flex-1 place-items-center p-6 text-center">
         <div>
-          <p className="font-display text-2xl font-semibold">Invites aren&apos;t available here</p>
+          <h1 className="font-display text-2xl font-semibold">Invites aren&apos;t available here</h1>
           <p className="mt-1 max-w-sm text-sm text-dust">This deployment runs in local mode, where trips live in one browser. Invites work once the cloud backend is connected.</p>
           <Link href="/app" className="btn btn-dark mt-4">Open The Ride Story</Link>
         </div>
-      </div>
+      </main>
     );
   return (
     <AuthGate>
