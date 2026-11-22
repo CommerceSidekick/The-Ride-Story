@@ -15,8 +15,8 @@ const STORIES = [
     photo: "/photos/battle.jpg",
     alt: "A lone rider silhouetted against a sunrise",
     strip: "Progress you earned, ride by ride.",
-    body: "The climb you couldn't clear in spring. Your first hundred kilometres. The ride back after an injury. We line your rides up over time, pair them with the photos you took, and show how far you've come.",
-    gets: ["Your rides on one map, over a season", "The climbs that changed, side by side", "A post that's more than a screenshot"],
+    body: "The climb you finally cleared. Your first hundred kilometres. The ride back after an injury. Add the ride and the photos you took — we put them on the route, pull out the numbers, and help you say why it mattered.",
+    gets: ["Your photos placed on the route, in 3D", "The numbers, without the spreadsheet", "A post that's more than a screenshot"],
   },
   {
     id: "group",
