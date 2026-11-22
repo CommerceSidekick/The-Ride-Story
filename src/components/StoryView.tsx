@@ -7,6 +7,7 @@ import { bearingAt, cumulativeKm } from "@/lib/geo";
 import type { Book, Trip } from "@/lib/types";
 import { distUnit, distVal, eleUnit, eleVal, fmtDate, fmtDuration, joinNames } from "@/lib/util";
 import { DAY_COLORS, shotCaption } from "./BookPageView";
+import { SPONSOR } from "@/lib/sponsor";
 import { Logo } from "./Logo";
 import { TerrainMap, type MapController } from "./TerrainMap";
 
@@ -219,6 +220,11 @@ export function StoryView({ trip, a, book, onShowBook, editHref }: { trip: Trip;
                     <Link href="/" className="s-btn s-btn-ghost">Tell your own story</Link>
                   </div>
                   <p className="x-mono mt-16 text-[0.7rem] uppercase tracking-[0.16em] text-[#a8a291]">Made with The Ride Story</p>
+                  <a href={SPONSOR.url("story-outro")} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-3 text-[#a8a291] transition hover:text-[#f2eee6]">
+                    <span className="x-mono text-[0.66rem] uppercase tracking-[0.16em]">Sponsored by</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={SPONSOR.logo} alt={SPONSOR.name} className="h-5 w-auto" />
+                  </a>
                 </div>
               )}
             </div>

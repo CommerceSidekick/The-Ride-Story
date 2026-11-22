@@ -11,10 +11,10 @@ const fraunces = Fraunces({ variable: "--font-fraunces", subsets: ["latin"], axe
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://theridestory.com"),
-  title: "The Ride Story — Every ride has a story",
+  title: "The Ride Story — The ride was epic. We'll help tell the story.",
   description:
-    "A hard-won climb, a Saturday loop with friends, a week in the mountains. Connect Strava, add your photos, and The Ride Story helps you tell the story — online over a 3D map, as a printed book, and as ready-to-post sets.",
-  openGraph: { title: "The Ride Story — Every ride has a story", images: ["/og.jpg"], siteName: "The Ride Story" },
+    "MTB, cycling and moto. Connect Strava or any GPS, add your photos, and get an online story over a 3D map, posts for Instagram and Facebook, and a printed book. Digital stories are free.",
+  openGraph: { title: "The Ride Story — The ride was epic. We'll help tell the story.", images: ["/og.jpg"], siteName: "The Ride Story" },
   twitter: { card: "summary_large_image" },
 };
 

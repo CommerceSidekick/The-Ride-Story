@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { Logo } from "@/components/Logo";
 
 const NAV = [
-  ["#stories", "Stories"],
+  ["#mtb", "MTB"],
+  ["#cycling", "Cycling"],
+  ["#moto", "Moto"],
   ["#how", "How it works"],
-  ["#what-you-get", "What you get"],
-  ["#crew", "For crews"],
+  ["#pricing", "Pricing"],
 ] as const;
 
 export function SiteHeader() {
@@ -26,7 +27,7 @@ export function SiteHeader() {
     >
       <div className="wrap flex h-[72px] items-center justify-between gap-6">
         <Link href="/" aria-label="The Ride Story home" className="text-[#f2eee6]">
-          <Logo size={30} className="max-[380px]:!w-[190px]" />
+          <Logo size={34} className="max-[380px]:!w-[190px]" />
         </Link>
         <nav className="hidden items-center gap-8 text-[0.92rem] font-medium lg:flex">
           {NAV.map(([href, label]) => (
@@ -35,7 +36,7 @@ export function SiteHeader() {
         </nav>
         <div className="flex items-center gap-3">
           <Link href="/app" className="hidden text-[0.92rem] font-medium text-[#f2eee6]/80 hover:text-[#f2eee6] sm:block">Sign in</Link>
-          <span className="hidden sm:block"><Link href="/app" className="s-btn s-btn-sm">Start your story</Link></span>
+          <span className="hidden sm:block"><Link href="/app" className="s-btn s-btn-sm">Start free</Link></span>
           <button className="relative grid h-10 w-10 place-items-center lg:hidden" aria-label="Menu" aria-expanded={open} onClick={() => setOpen(!open)}>
             <span className="block h-[2px] w-6 bg-[#f2eee6] transition" style={{ transform: open ? "translateY(4px) rotate(45deg)" : "translateY(-3px)" }} />
             <span className="absolute block h-[2px] w-6 bg-[#f2eee6] transition" style={{ transform: open ? "rotate(-45deg)" : "translateY(5px)" }} />
@@ -48,7 +49,7 @@ export function SiteHeader() {
             <a key={href} href={href} onClick={() => setOpen(false)} className="x-h3 border-b border-[#2e312b] py-4">{label}</a>
           ))}
           <Link href="/app" className="x-h3 py-4">Sign in</Link>
-          <Link href="/app" className="s-btn mt-3 self-start">Start your story</Link>
+          <Link href="/app" className="s-btn mt-3 self-start">Start free</Link>
         </nav>
       )}
     </header>

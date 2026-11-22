@@ -3,266 +3,222 @@ import Link from "next/link";
 import { Reveal } from "@/components/site/Reveal";
 import { SiteFooter } from "@/components/site/SiteFooter";
 import { SiteHeader } from "@/components/site/SiteHeader";
+import { SPONSOR } from "@/lib/sponsor";
 
 const Arr = () => <span className="arr" aria-hidden>→</span>;
 
-const STORIES = [
+const RIDES = [
   {
-    id: "solo",
-    n: "01",
-    kicker: "Solo rides",
-    title: ["Progress you", "can see."],
-    photo: "/photos/battle.jpg",
-    alt: "A lone rider silhouetted against a sunrise",
-    strip: "Progress you earned, ride by ride.",
-    body: "The climb you finally cleared. Your first hundred kilometres. The ride back after an injury. Add the ride and the photos you took — we put them on the route, pull out the numbers, and help you say why it mattered.",
-    gets: ["Your photos placed on the route, in 3D", "The numbers, without the spreadsheet", "A post that's more than a screenshot"],
+    id: "mtb", n: "01", label: "MTB", photo: "/photos/enduro.jpg", alt: "A mountain biker riding down a rocky forest trail",
+    title: "Every root, rock and hike-a-bike.",
+    body: "Laps after work, enduro days, the trip you'll still be talking about in ten years. Every photo lands on the exact spot on the trail, on a 3D map you'll actually want to show people.",
   },
   {
-    id: "group",
-    n: "02",
-    kicker: "Group rides",
-    title: ["Same loop,", "new story."],
-    photo: "/photos/crew.jpg",
-    alt: "A group of mountain bikers regrouping on a trail above a valley",
-    strip: "The weekly loop, everyone's photos together.",
-    body: "The weekly ride with friends is the one you'll remember least, because it happens so often. Everyone's photos land in one place, the route is mapped once, and the group gets a recap worth opening.",
-    gets: ["Everyone's photos, one ride", "Each rider's numbers, without the spreadsheet", "A carousel ready for the group chat"],
+    id: "cycling", n: "02", label: "Cycling", photo: "/photos/road-dawn.jpg", alt: "Road cyclists riding together at sunrise",
+    title: "Climbs, cafés and the long way home.",
+    body: "Gran fondos, the Saturday group ride, your first century. The climbs, the splits and the faces at the top, told properly instead of buried in a feed.",
   },
   {
-    id: "trip",
-    n: "03",
-    kicker: "Trips",
-    title: ["A week", "worth keeping."],
-    photo: "/photos/trip.jpg",
-    alt: "A mountain biker descending a gravel road through alpine meadows",
-    strip: "A week of riding, told day by day.",
-    body: "Oaxaca, Moab, the Alps. Each day becomes a chapter: the route on a 3D map, the climbs, where every photo was taken, and what happened — in your words. Read it online, or print it as a book.",
-    gets: ["An online story, photos over a 3D map of the ride", "A printed book with maps and elevation", "A post for every day of the trip"],
+    id: "moto", n: "03", label: "Moto", photo: "/photos/moto-route.jpg", alt: "A motorcycle route drawn over a 3D map of mountain roads",
+    title: "Big miles. Bigger views.",
+    body: "Adventure loops, dual-sport weekends, the run across three states. Drop in the GPX from your GPS and the clips from your helmet cam. We'll handle the rest.",
   },
 ];
 
 const STEPS = [
-  ["01", "Connect", "Connect Strava, or drop in the ride files from your Garmin, Wahoo or Coros. Every rider brings their own."],
-  ["02", "Upload", "Photos and clips from every phone in the crew. We pin each shot to the exact spot on the trail where it was taken."],
-  ["03", "Tell it", "We draft the story — maps, numbers, the moments that stood out. You add what happened. Then read it online, print it, or post it."],
+  ["01", "Bring the ride", "Connect Strava, or drop in GPX and FIT files from Garmin, Wahoo, Coros or any GPS."],
+  ["02", "Add the photos", "Phones, cameras, helmet cams. Invite the crew and everyone adds their own. Each shot is matched to where and when it happened."],
+  ["03", "Tell it", "You get an online story over a 3D map, posts sized for Instagram and Facebook, and a book you can print. Change any word you like."],
 ];
 
-const DETAILS = [
-  ["Photos that know where they were", "Every shot is matched to the ride by its time, so a caption reads 11:42 · km 14.2 · 2,870 m without anyone tagging anything."],
-  ["One ride, counted once", "When four of you record the same descent, the totals stay honest — and each rider still gets their own numbers."],
-  ["Maps made for print", "Routes are drawn as clean vector art with your photo stops marked and the elevation underneath. Sharp at any size."],
-  ["Your voice, not a template", "Start from a draft that sounds like you — stoked, dry or poetic — then change any word. Add the stuff only you know."],
-  ["Built for every feed", "4:5 carousels, 9:16 stories and square albums, sized for Instagram and Facebook, with captions written."],
-  ["Print it or publish it", "A print-ready PDF at real book sizes, or a private link to the full story — the back cover carries a QR code to it."],
+const FAQ = [
+  ["Do I need Strava?", "No. Strava makes it quicker, but any GPX, FIT or TCX file works, from any bike computer, watch or moto GPS."],
+  ["Who owns my photos?", "You do. We use them to build your story and nothing else."],
+  ["Can my whole crew add photos?", "Yes. Send one invite link and everyone adds their own rides and photos from their own phone."],
+  ["What does the book cost?", "$25 a copy plus shipping. Digital stories are free."],
 ];
 
 export default function Home() {
   return (
-    <div className="site flex-1">
+    <div className="site topo flex-1">
+      <div className="topo-layer" aria-hidden />
       <SiteHeader />
 
-      {/* ─────────── Hero ─────────── */}
-      <section className="grain relative flex min-h-[100svh] items-end overflow-hidden">
-        <Image src="/photos/hero.jpg" alt="A mountain biker silhouetted on a ridge under a dramatic sky" fill priority sizes="100vw" className="object-cover object-[60%_center]" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(14,15,12,0.92) 0%, rgba(14,15,12,0.6) 45%, rgba(14,15,12,0.15) 100%), linear-gradient(0deg, rgba(14,15,12,1) 0%, rgba(14,15,12,0.35) 45%, rgba(14,15,12,0) 70%)" }} />
-        <div className="wrap relative pb-16 pt-40 md:pb-24">
-          <div className="x-eyebrow">Ride stories, books and posts</div>
-          <h1 className="x-display mt-6 max-w-[11ch]">
-            Every ride <br />has a <span className="x-flame">story.</span>
-          </h1>
-          <p className="x-lead mt-8 max-w-[40ch] text-[#f2eee6]/85">
-            A hard-won climb, a Saturday loop with friends, a week in the mountains. Connect Strava, add your photos, and we&apos;ll help you capture the ride and tell its story.
+      {/* Hero */}
+      <section className="relative flex min-h-[92svh] items-center">
+        <div className="wrap relative pb-16 pt-32">
+          <h1 className="x-display max-w-[12ch] !text-[clamp(3.2rem,10vw,9.5rem)]">The ride was epic.</h1>
+          <p className="x-h2 mt-6 !text-[clamp(1.7rem,3.6vw,3.1rem)] text-[#ff5a1f]">We&apos;ll help tell the story.</p>
+          <p className="x-lead mt-8 max-w-[44ch] text-[#f2eee6]/85">
+            Strava kept the numbers. Your phone kept 600 photos. Your buddies kept the good ones. Throw it all in and we&apos;ll turn it into something worth reading, posting and putting on a shelf.
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Link href="/app" className="s-btn">Start your story <Arr /></Link>
-            <a href="#what-you-get" className="s-btn s-btn-ghost">See what you get</a>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Link href="/app" className="s-btn">Start free <Arr /></Link>
+            <a href="#how" className="s-btn s-btn-ghost">How it works</a>
           </div>
+          <dl className="mt-16 grid max-w-3xl grid-cols-2 gap-px overflow-hidden rounded-[6px] border border-[#f2eee6]/10 bg-[#f2eee6]/10 sm:grid-cols-4">
+            {[["$0", "Digital stories"], ["$25", "Printed book"], ["3D", "Every route"], ["GPX", "Strava, Garmin, any GPS"]].map(([v, l]) => (
+              <div key={l} className="bg-[#0e0f0c]/80 px-5 py-4">
+                <dt className="font-[family-name:var(--font-archivo)] text-[1.9rem] font-black leading-none text-[#ff5a1f] [font-stretch:125%]">{v}</dt>
+                <dd className="x-mono mt-2 text-[0.68rem] uppercase tracking-[0.14em] text-[#a8a291]">{l}</dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
-      {/* ─────────── Pillars strip ─────────── */}
-      <section className="border-b border-[#2e312b]">
-        <div className="wrap grid md:grid-cols-3">
-          {STORIES.map((s, i) => (
-            <a key={s.id} href={`#${s.id}`} className={`group block py-8 md:px-8 ${i ? "border-t border-[#2e312b] md:border-l md:border-t-0" : "md:pl-0"}`}>
-              <div className="x-mono text-[0.8rem] text-[#e8862a]">{s.n}</div>
-              <div className="x-h3 mt-2 transition group-hover:text-[#e8862a]">{s.kicker}</div>
-              <div className="x-muted mt-1 text-[0.95rem]">{s.strip}</div>
-            </a>
-          ))}
-        </div>
-      </section>
-
-      {/* ─────────── Manifesto ─────────── */}
-      <section className="sec">
-        <div className="wrap grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-end">
-          <Reveal>
-            <div className="x-eyebrow">Why we built it</div>
-            <h2 className="x-h2 mt-5">
-              Your data says <span className="x-outline">what</span> happened.<br />
-              Your story says <span className="x-flame">why it mattered.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="x-lead x-muted max-w-[46ch]">
-              After a ride, the pieces scatter: a file on Strava, photos across five phones, a group chat asking for &ldquo;that one of me on the descent.&rdquo; The Ride Story puts them back together, in order and in place, so the ride becomes something you keep.
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ─────────── Three stories ─────────── */}
-      <section id="stories" className="pb-8">
-        {STORIES.map((s, i) => (
-          <article key={s.id} id={s.id} className="sec !pt-0 scroll-mt-24">
-            <div className={`wrap grid items-center gap-10 lg:gap-16 ${i % 2 ? "lg:grid-cols-[1fr_1.15fr]" : "lg:grid-cols-[1.15fr_1fr]"}`}>
-              <Reveal className={`relative aspect-[4/3] overflow-hidden rounded-[4px] ${i % 2 ? "lg:order-2" : ""}`}>
-                <Image src={s.photo} alt={s.alt} fill sizes="(min-width: 1024px) 55vw, 100vw" className="object-cover" />
-                <div className="absolute inset-0" style={{ background: "linear-gradient(0deg, rgba(14,15,12,0.55), transparent 50%)" }} />
-                <div className="x-display absolute bottom-3 left-5 !text-[clamp(4rem,9vw,8rem)] text-[#f2eee6]/90">{s.n}</div>
-              </Reveal>
-              <Reveal delay={100}>
-                <div className="x-eyebrow">{s.kicker}</div>
-                <h3 className="x-h2 mt-5 !text-[clamp(1.9rem,4vw,3.4rem)]">
-                  {s.title[0]}
-                  <br />
-                  <span className="x-flame">{s.title[1]}</span>
-                </h3>
-                <p className="x-lead x-muted mt-6 max-w-[48ch]">{s.body}</p>
-                <ul className="mt-7 space-y-3">
-                  {s.gets.map((g) => (
-                    <li key={g} className="flex gap-3 text-[1rem]">
-                      <span className="mt-[0.7em] h-[2px] w-4 flex-none bg-[#e8862a]" />
-                      {g}
-                    </li>
-                  ))}
-                </ul>
-              </Reveal>
-            </div>
-          </article>
-        ))}
-      </section>
-
-      {/* ─────────── How it works ─────────── */}
-      <section id="how" className="sec on-bone scroll-mt-16">
+      {/* MTB · Cycling · Moto */}
+      <section className="sec !pt-8">
         <div className="wrap">
-          <Reveal>
-            <div className="x-eyebrow">How it works</div>
-            <h2 className="x-h2 mt-5 max-w-[16ch]">You ride. <span className="x-outline">We do the sorting.</span></h2>
-          </Reveal>
-          <div className="mt-16 grid gap-px overflow-hidden rounded-[4px] bg-[#d8d1c2] md:grid-cols-3">
-            {STEPS.map(([n, t, d], i) => (
-              <Reveal key={n} delay={i * 110} className="bg-[#f2eee6] p-8 md:p-10">
-                <div className="x-display !text-[clamp(4rem,7vw,6.5rem)] text-[#e8862a]">{n}</div>
-                <div className="x-h3 mt-6">{t}</div>
-                <p className="x-muted mt-3 text-[1rem]">{d}</p>
+          <div className="grid gap-5 lg:grid-cols-3">
+            {RIDES.map((r, i) => (
+              <Reveal key={r.id} delay={i * 90} className="panel scroll-mt-24 overflow-hidden" >
+                <article id={r.id}>
+                  <div className="relative aspect-[4/3]">
+                    <Image src={r.photo} alt={r.alt} fill sizes="(min-width:1024px) 33vw, 100vw" className="object-cover" />
+                    <div className="absolute inset-0" style={{ background: "linear-gradient(0deg, rgba(14,15,12,0.85), rgba(14,15,12,0) 55%)" }} />
+                    <div className="absolute bottom-4 left-5 font-[family-name:var(--font-archivo)] text-[2.6rem] font-black uppercase leading-none [font-stretch:125%]">{r.label}</div>
+                  </div>
+                  <div className="p-6">
+                    <div className="x-eyebrow">{r.n} · {r.label}</div>
+                    <h2 className="x-h3 mt-3">{r.title}</h2>
+                    <p className="x-muted mt-3 text-[0.98rem] leading-relaxed">{r.body}</p>
+                  </div>
+                </article>
               </Reveal>
             ))}
           </div>
-          <Reveal className="mt-12 flex flex-wrap items-center gap-x-8 gap-y-3">
-            <span className="x-mono text-[0.8rem] uppercase tracking-[0.14em] text-[#4d4a41]">Works with rides from</span>
-            {["Strava", "Garmin", "Wahoo", "Coros", "Apple Watch", "GPX · FIT · TCX"].map((b) => (
-              <span key={b} className="x-h3 !text-[1.05rem] text-[#0e0f0c]/70">{b}</span>
+        </div>
+      </section>
+
+      {/* How it works */}
+      <section id="how" className="sec scroll-mt-16">
+        <div className="wrap">
+          <Reveal className="max-w-2xl">
+            <div className="x-eyebrow">How it works</div>
+            <h2 className="x-h2 mt-4">Three steps. No design degree.</h2>
+          </Reveal>
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {STEPS.map(([n, t, d], i) => (
+              <Reveal key={n} delay={i * 90} className="panel p-7">
+                <div className="font-[family-name:var(--font-archivo)] text-[3.2rem] font-black leading-none text-[#ff5a1f] [font-stretch:125%]">{n}</div>
+                <h3 className="x-h3 mt-5">{t}</h3>
+                <p className="x-muted mt-2 text-[0.98rem] leading-relaxed">{d}</p>
+              </Reveal>
             ))}
-          </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* ─────────── Statement band ─────────── */}
-      <section className="grain relative overflow-hidden">
-        <Image src="/photos/statement.jpg" alt="" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0 bg-[#0e0f0c]/60" />
-        <div className="wrap sec relative text-center">
-          <Reveal>
-            <p className="x-h2 mx-auto max-w-[18ch]">
-              The ride ends.<br /><span className="x-flame">The story doesn&apos;t have to.</span>
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ─────────── What you get ─────────── */}
+      {/* What you get */}
       <section id="what-you-get" className="sec scroll-mt-16">
         <div className="wrap">
-          <Reveal className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
+          <Reveal className="grid gap-6 lg:grid-cols-2 lg:items-end">
             <div>
               <div className="x-eyebrow">What you get</div>
-              <h2 className="x-h2 mt-5">A story to read.<br /><span className="x-flame">A book to keep.</span></h2>
+              <h2 className="x-h2 mt-4">One ride. Three ways to tell it.</h2>
             </div>
-            <p className="x-lead x-muted max-w-[46ch]">One set of rides and photos, told three ways. Everything is built from what you recorded and shot — and every word is yours to change.</p>
+            <p className="x-lead x-muted max-w-[46ch]">Built from what you recorded and what you shot. Nothing made up, nothing stock.</p>
           </Reveal>
-
-          <div className="mt-16 grid gap-6 lg:grid-cols-[1.35fr_1fr]">
-            <Reveal className="on-ridge relative overflow-hidden rounded-[4px] p-6 md:p-10">
-              <div className="x-mono text-[0.8rem] text-[#e8862a]">01 · The storybook</div>
-              <div className="x-h3 mt-2">A printed book.</div>
-              <p className="x-muted mt-2 max-w-[44ch] text-[0.98rem]">Cover, the route of every day, elevation, your best shots and your words. Print-ready files for Lulu, Blurb, Prodigi and other photo-book printers.</p>
-              <div className="relative mt-8 h-[300px] sm:h-[380px]">
-                <Image src="/marketing/book-day.jpg" alt="A storybook page showing a day's route map, stats and elevation" width={1400} height={1120} className="tilt-r absolute right-0 top-6 w-[72%] rounded-[3px] shadow-2xl shadow-black/60" />
-                <Image src="/marketing/book-cover.jpg" alt="A storybook cover with a mountain bike photo and the trip title" width={1400} height={1120} className="tilt absolute left-0 top-0 w-[64%] rounded-[3px] shadow-2xl shadow-black/70" />
-              </div>
+          <div className="mt-12 grid gap-5 lg:grid-cols-[1.3fr_1fr] lg:items-start">
+            <Reveal className="panel overflow-hidden p-6 md:p-8">
+              <div className="x-eyebrow">The online story</div>
+              <h3 className="x-h3 mt-2">Your photos over a 3D map of the ride.</h3>
+              <p className="x-muted mt-2 max-w-[48ch] text-[0.98rem]">Scroll and the map follows the route, stopping wherever someone took a photo. One link for everyone who wasn&apos;t there.</p>
+              <Image src="/marketing/story-photo.jpg" alt="A ride photo floating over a 3D satellite map of the route" width={1200} height={695} className="mt-6 w-full rounded-[4px]" />
             </Reveal>
-            <div className="grid gap-6">
-              <Reveal delay={100} className="on-ridge overflow-hidden rounded-[4px] p-6 md:p-8">
-                <div className="x-mono text-[0.8rem] text-[#e8862a]">02 · The post set</div>
-                <div className="x-h3 mt-2">Posts, sized and captioned.</div>
-                <div className="mt-6 flex gap-3">
+            <div className="grid gap-5">
+              <Reveal delay={90} className="panel overflow-hidden p-6 md:p-8">
+                <div className="x-eyebrow">The book</div>
+                <h3 className="x-h3 mt-2">Printed, with maps and elevation.</h3>
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  <Image src="/marketing/book-cover.jpg" alt="Photo book cover" width={1400} height={1121} className="w-full rounded-[3px]" />
+                  <Image src="/marketing/book-day.jpg" alt="Photo book page with a route map, stats and elevation" width={1400} height={1123} className="w-full rounded-[3px]" />
+                </div>
+              </Reveal>
+              <Reveal delay={160} className="panel overflow-hidden p-6 md:p-8">
+                <div className="x-eyebrow">The posts</div>
+                <h3 className="x-h3 mt-2">Instagram and Facebook, sized and captioned.</h3>
+                <div className="mt-5 flex gap-3">
                   {["ig-cover", "ig-map", "ig-stats"].map((f) => (
                     <Image key={f} src={`/marketing/${f}.jpg`} alt="" width={540} height={675} className="w-1/3 rounded-[3px]" />
                   ))}
                 </div>
               </Reveal>
-              <Reveal delay={180} className="on-ridge overflow-hidden rounded-[4px] p-6 md:p-8">
-                <div className="x-mono text-[0.8rem] text-[#e8862a]">03 · The online story</div>
-                <div className="x-h3 mt-2">Photos over a 3D map of the ride.</div>
-                <p className="x-muted mt-2 text-[0.98rem]">Scroll through each day as the map follows the route. One private link for everyone who wasn&apos;t there.</p>
-                <Image src="/marketing/story-photo.jpg" alt="The online story: a photo floating over a 3D satellite map with the route" width={1200} height={695} className="mt-6 w-full rounded-[3px]" />
-              </Reveal>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─────────── Crews ─────────── */}
-      <section id="crew" className="sec on-ridge scroll-mt-16">
-        <div className="wrap grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-          <Reveal className="relative">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[4px]">
-              <Image src="/photos/singletrack.jpg" alt="Riders following each other down forest singletrack" fill sizes="(min-width:1024px) 45vw, 100vw" className="object-cover" />
-            </div>
-            <div className="absolute -bottom-6 -right-2 rounded-[4px] bg-[#e8862a] px-6 py-5 text-[#0e0f0c] md:-right-8">
-              <div className="x-mono text-[0.72rem] uppercase tracking-[0.14em]">Day 2 · La Cumbre</div>
-              <div className="x-h3 mt-1">16.6 km · 1,328 m down</div>
-            </div>
+      {/* Pricing */}
+      <section id="pricing" className="sec scroll-mt-16">
+        <div className="wrap">
+          <Reveal className="max-w-2xl">
+            <div className="x-eyebrow">Pricing</div>
+            <h2 className="x-h2 mt-4">Basically free.</h2>
+            <p className="x-lead x-muted mt-4">Digital stories cost nothing. You only pay for paper.</p>
           </Reveal>
-          <Reveal delay={100}>
-            <div className="x-eyebrow">Riding with others</div>
-            <h2 className="x-h2 mt-5">Everyone&apos;s photos.<br /><span className="x-flame">One story.</span></h2>
-            <p className="x-lead x-muted mt-6 max-w-[46ch]">Send one link. Each rider adds their own rides and photos from their own phone. We merge the duplicate recordings, sort everything by day, and credit every photo to whoever took it.</p>
-            <div className="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-[4px] bg-[#2e312b]">
-              {DETAILS.map(([t, d]) => (
-                <div key={t} className="bg-[#1c1e1a] p-5">
-                  <div className="font-[family-name:var(--font-archivo)] text-[0.98rem] font-extrabold leading-tight">{t}</div>
-                  <p className="x-muted mt-2 text-[0.88rem] leading-relaxed">{d}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            <Reveal className="panel flex flex-col p-7">
+              <div className="x-eyebrow">Digital</div>
+              <div className="mt-4 font-[family-name:var(--font-archivo)] text-[3.4rem] font-black leading-none [font-stretch:125%]">$0</div>
+              <ul className="mt-6 flex-1 space-y-2.5 text-[0.98rem]">
+                {["Online story over a 3D map", "Instagram and Facebook posts", "Invite your crew", "Private share link"].map((x) => <Li key={x}>{x}</Li>)}
+              </ul>
+              <Link href="/app" className="s-btn mt-8 w-full">Start free</Link>
+              <p className="mt-3 text-center text-[0.78rem] text-[#a8a291]">Generous free limits.</p>
+            </Reveal>
+            <Reveal delay={90} className="panel flex flex-col border-[#ff5a1f]/50 p-7">
+              <div className="x-eyebrow">Printed book</div>
+              <div className="mt-4 flex items-baseline gap-2">
+                <span className="font-[family-name:var(--font-archivo)] text-[3.4rem] font-black leading-none [font-stretch:125%]">$25</span>
+                <span className="text-[#a8a291]">per copy</span>
+              </div>
+              <ul className="mt-6 flex-1 space-y-2.5 text-[0.98rem]">
+                {["Full-colour photo book", "Your maps, photos and words", "One for every rider in the crew", "Shipping extra"].map((x) => <Li key={x}>{x}</Li>)}
+              </ul>
+              <Link href="/app" className="s-btn s-btn-ghost mt-8 w-full">Make a book</Link>
+            </Reveal>
+            <Reveal delay={160} className="panel flex flex-col p-7">
+              <div className="x-eyebrow">Clubs, shops and tour operators</div>
+              <div className="mt-4 font-[family-name:var(--font-archivo)] text-[2.2rem] font-black leading-none [font-stretch:125%]">Let&apos;s talk</div>
+              <ul className="mt-6 flex-1 space-y-2.5 text-[0.98rem]">
+                {["A story for every trip you run", "Your branding on every story", "Books for the whole group"].map((x) => <Li key={x}>{x}</Li>)}
+              </ul>
+              <a href="mailto:hello@theridestory.com?subject=The%20Ride%20Story%20for%20our%20group" className="s-btn s-btn-ghost mt-8 w-full">Get in touch</a>
+            </Reveal>
+          </div>
+
+          <div className="mt-16 grid gap-x-10 gap-y-6 md:grid-cols-2">
+            {FAQ.map(([q, a]) => (
+              <div key={q} className="border-t border-[#f2eee6]/10 pt-5">
+                <h3 className="x-h3 !text-[1.1rem]">{q}</h3>
+                <p className="x-muted mt-2 text-[0.96rem]">{a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ─────────── CTA ─────────── */}
-      <section className="grain relative overflow-hidden">
-        <Image src="/photos/mountain.jpg" alt="" fill sizes="100vw" className="object-cover" />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(90deg, rgba(14,15,12,0.92), rgba(14,15,12,0.55))" }} />
-        <div className="wrap sec relative">
+      {/* Sponsor */}
+      <section className="border-y border-[#f2eee6]/10 bg-[#0e0f0c]/70">
+        <div className="wrap flex flex-col items-start gap-5 py-10 md:flex-row md:items-center md:justify-between">
+          <a href={SPONSOR.url("homepage-band")} target="_blank" rel="noreferrer" className="flex items-center gap-5">
+            <span className="x-mono text-[0.72rem] uppercase tracking-[0.16em] text-[#a8a291]">Sponsored by</span>
+            <Image src={SPONSOR.logo} alt={SPONSOR.name} width={649} height={100} className="h-8 w-auto" />
+          </a>
+          <p className="max-w-md text-[0.95rem] text-[#f2eee6]/75">Epoch Cycling helps riders understand their bodies, fuel properly and find their edge.</p>
+          <a href={SPONSOR.url("homepage-button")} target="_blank" rel="noreferrer" className="s-btn s-btn-ghost s-btn-sm">Visit Epoch Cycling <Arr /></a>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="sec">
+        <div className="wrap text-center">
           <Reveal>
-            <div className="x-eyebrow">Your turn</div>
-            <h2 className="x-display mt-6 max-w-[12ch] !text-[clamp(2.8rem,8vw,7.5rem)]">Your next ride is already a <span className="x-flame">story.</span></h2>
-            <div className="mt-10 flex flex-wrap gap-4">
-              <Link href="/app" className="s-btn">Start your story <Arr /></Link>
-              <Link href="/app" className="s-btn s-btn-ghost">Open the Oaxaca sample</Link>
+            <h2 className="x-display mx-auto max-w-[14ch] !text-[clamp(2.6rem,7vw,6.5rem)]">Your last ride is still on your phone.</h2>
+            <div className="mt-10 flex justify-center">
+              <Link href="/app" className="s-btn">Start free <Arr /></Link>
             </div>
           </Reveal>
         </div>
@@ -270,5 +226,14 @@ export default function Home() {
 
       <SiteFooter />
     </div>
+  );
+}
+
+function Li({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3">
+      <span className="mt-[0.7em] h-[2px] w-3 flex-none bg-[#ff5a1f]" />
+      <span>{children}</span>
+    </li>
   );
 }
