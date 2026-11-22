@@ -9,16 +9,20 @@ import type { TrackPoint } from "@/lib/types";
 export type MapTrack = { id: string; points: TrackPoint[]; color?: string };
 export type MapPhoto = { id: string; lat: number; lon: number; thumbUrl: string; trackId?: string };
 
+export type Pad = { top: number; bottom: number; left: number; right: number };
+
 export type MapController = {
   map: MLMap;
   /** Highlight one track (others dim) and frame it in 3D. */
-  focusTrack: (id: string | null, opts?: { duration?: number; pitch?: number }) => void;
+  focusTrack: (id: string | null, opts?: { duration?: number; pitch?: number; padding?: Pad }) => void;
   /** Fill a track with colour up to `fraction` of its length (the ride "so far"). */
   setProgress: (id: string, fraction: number) => void;
   /** Fly close to a point, looking along `bearing`. */
-  flyTo: (lat: number, lon: number, opts?: { zoom?: number; bearing?: number; pitch?: number; duration?: number }) => void;
-  fitAll: (opts?: { duration?: number; pitch?: number }) => void;
+  flyTo: (lat: number, lon: number, opts?: { zoom?: number; bearing?: number; pitch?: number; duration?: number; padding?: Pad }) => void;
+  fitAll: (opts?: { duration?: number; pitch?: number; padding?: Pad }) => void;
   setActivePhoto: (id: string | null) => void;
+  /** Show only these photo pins (null = all). */
+  showPins: (ids: Set<string> | null) => void;
 };
 
 // One contour generator per page, shared by every map instance.
@@ -55,7 +59,7 @@ export function TerrainMap({
   const el = useRef<HTMLDivElement>(null);
   const [err, setErr] = useState("");
   const ready = useRef(onReady);
-  ready.current = onReady;
+  useEffect(() => { ready.current = onReady; }, [onReady]);
 
   useEffect(() => {
     if (!el.current) return;
@@ -86,10 +90,11 @@ export function TerrainMap({
           if (ev.sourceId || ev.tile) return; // a slow or missing tile is not a broken map
           if (map && !map.getStyle()) setErr((e as unknown as { error?: { message?: string } }).error?.message ?? "Map failed to load"); });
 
-        const frame = (pts: TrackPoint[][], duration: number, pitch: number, bearing?: number) => {
+        const basePad: Pad = { top: 90, bottom: 110, left: 70, right: 70 };
+        const frame = (pts: TrackPoint[][], duration: number, pitch: number, bearing?: number, padding: Pad = basePad) => {
           const b = boundsOf(pts);
           if (!b || !map) return;
-          const cam = map.cameraForBounds([[b.minLon, b.minLat], [b.maxLon, b.maxLat]], { padding: { top: 90, bottom: 110, left: 70, right: 70 }, bearing: bearing ?? 0 });
+          const cam = map.cameraForBounds([[b.minLon, b.minLat], [b.maxLon, b.maxLat]], { padding, bearing: bearing ?? 0 });
           if (!cam) return;
           map.flyTo({ center: cam.center, zoom: Math.min((cam.zoom ?? 12) - 0.35, 15), bearing: bearing ?? 0, pitch, duration, essential: true, curve: 1.3 });
         };
@@ -126,17 +131,18 @@ export function TerrainMap({
                 map!.setPaintProperty(`trk-${t.id}`, "line-width", on ? 3.4 : 2);
               }
               const t = tracks.find((x) => x.id === id);
-              if (t) frame([t.points], o.duration ?? 2600, o.pitch ?? 58, overallBearing(t.points) - 20);
-              else frame(tracks.map((x) => x.points), o.duration ?? 2600, o.pitch ?? 45);
+              if (t) frame([t.points], o.duration ?? 2600, o.pitch ?? 58, overallBearing(t.points) - 20, o.padding);
+              else frame(tracks.map((x) => x.points), o.duration ?? 2600, o.pitch ?? 45, 0, o.padding);
             },
             setProgress: (id, f) => {
               const c = colorOf(id);
               const x = Math.min(0.9999, Math.max(0.0001, f));
               map!.setPaintProperty(`trk-${id}`, "line-gradient", ["interpolate", ["linear"], ["line-progress"], 0, c, x, c, Math.min(1, x + 0.0001), ROUTE.dim, 1, ROUTE.dim]);
             },
-            flyTo: (lat, lon, o = {}) => map!.flyTo({ center: [lon, lat], zoom: o.zoom ?? 14.2, bearing: o.bearing ?? map!.getBearing(), pitch: o.pitch ?? 66, duration: o.duration ?? 2800, essential: true, curve: 1.2 }),
-            fitAll: (o = {}) => frame(tracks.map((x) => x.points), o.duration ?? 2400, o.pitch ?? 45),
+            flyTo: (lat, lon, o = {}) => map!.flyTo({ center: [lon, lat], zoom: o.zoom ?? 14.2, bearing: o.bearing ?? map!.getBearing(), pitch: o.pitch ?? 66, duration: o.duration ?? 2800, essential: true, curve: 1.2, padding: o.padding ?? { top: 0, bottom: 0, left: 0, right: 0 } }),
+            fitAll: (o = {}) => frame(tracks.map((x) => x.points), o.duration ?? 2400, o.pitch ?? 45, 0, o.padding),
             setActivePhoto: (id) => markers.forEach((m, k) => m.getElement().classList.toggle("is-active", k === id)),
+            showPins: (ids) => markers.forEach((m, k) => { m.getElement().style.visibility = ids === null || ids.has(k) ? "visible" : "hidden"; }),
           };
           if (tracks.length) frame(tracks.map((x) => x.points), 0, initialPitch);
           // Hand over control once the first frame is drawn; don't wait for every terrain tile.

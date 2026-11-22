@@ -217,6 +217,7 @@ export default function Home() {
                 <div className="x-mono text-[0.8rem] text-[#e8862a]">03 · The online story</div>
                 <div className="x-h3 mt-2">Photos over a 3D map of the ride.</div>
                 <p className="x-muted mt-2 text-[0.98rem]">Scroll through each day as the map follows the route. One private link for everyone who wasn&apos;t there.</p>
+                <Image src="/marketing/story-photo.jpg" alt="The online story: a photo floating over a 3D satellite map with the route" width={1200} height={695} className="mt-6 w-full rounded-[3px]" />
               </Reveal>
             </div>
           </div>

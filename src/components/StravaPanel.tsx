@@ -27,11 +27,13 @@ export function StravaPanel({ startDate, endDate, rides, units, onReturn }: { st
   const [to, setTo] = useState(() => (endDate ? isoDay(dayKeyToMs(endDate) + 86400000) : isoDay(Date.now())));
   const [list, setList] = useState<Activity[] | null>(null);
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(() => {
+    if (typeof window === "undefined") return "";
+    const q = new URLSearchParams(window.location.search).get("strava");
+    return (q && RESULT[q]) || "";
+  });
 
   useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get("strava");
-    if (q && RESULT[q]) setMsg(RESULT[q]);
     fetch("/api/strava/status").then((r) => r.json()).then(setStatus).catch(() => setStatus({ configured: false, connected: false }));
   }, []);
 
@@ -52,7 +54,11 @@ export function StravaPanel({ startDate, endDate, rides, units, onReturn }: { st
     setBusy(false);
   }, [from, to]);
 
-  useEffect(() => { if (status?.connected && list === null) load(); }, [status, list, load]);
+  useEffect(() => {
+    if (!status?.connected || list !== null) return;
+    const t = setTimeout(load, 0); // first load once connected
+    return () => clearTimeout(t);
+  }, [status, list, load]);
 
   if (!status || !status.configured) return null;
 

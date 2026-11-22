@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BookPageView } from "@/components/BookPageView";
 import { Logo } from "@/components/Logo";
+import { StoryView } from "@/components/StoryView";
 import { analyze } from "@/lib/analyze";
 import { SIZES } from "@/lib/book";
 import { store } from "@/lib/store";
@@ -12,23 +13,26 @@ import type { TripBundle } from "@/lib/types";
 export default function PublishedBook() {
   const { slug } = useParams<{ slug: string }>();
   const [bundle, setBundle] = useState<TripBundle | null | undefined>(undefined);
+  const [view, setView] = useState<"story" | "book">(() => (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("view") === "book" ? "book" : "story"));
   useEffect(() => {
     store.getPublished(slug).then(setBundle).catch(() => setBundle(null));
   }, [slug]);
   const a = useMemo(() => (bundle ? analyze(bundle.trip, bundle.rides, bundle.media) : null), [bundle]);
 
-  if (bundle === undefined) return <div className="grid flex-1 place-items-center bg-loam text-dust">Opening the book…</div>;
+  if (bundle === undefined) return <div className="grid flex-1 place-items-center bg-loam text-dust">Opening the story…</div>;
   const book = bundle?.trip.book;
-  if (!bundle || !a || !book)
+  if (!bundle || !a)
     return (
       <div className="grid flex-1 place-items-center bg-loam p-6 text-center text-bone">
         <div>
-          <p className="font-display text-3xl font-semibold">This book isn&apos;t published</p>
+          <p className="font-display text-3xl font-semibold">This story isn&apos;t published</p>
           <p className="mt-2 text-sm text-dust">The link may be wrong, or the owner unpublished it.</p>
           <Link href="/" className="btn btn-primary mt-5">The Ride Story home</Link>
         </div>
       </div>
     );
+  if (view === "story" || !book)
+    return <StoryView trip={bundle.trip} a={a} book={book} onShowBook={book ? () => { setView("book"); window.scrollTo(0, 0); } : undefined} />;
   const size = SIZES[book.config.size];
   const clips = bundle.media.filter((m) => m.kind === "video" && !m.hidden && m.videoUrl);
   const url = typeof window !== "undefined" ? window.location.href : null;
@@ -37,7 +41,10 @@ export default function PublishedBook() {
       <style>{`@page { size: ${size.w}in ${size.h}in; margin: 0; }`}</style>
       <header className="no-print mx-auto flex max-w-5xl items-center justify-between px-5 py-4 text-bone">
         <Link href="/"><Logo size={24} /></Link>
-        <button className="btn btn-ghost btn-sm" onClick={() => window.print()}>Print / PDF</button>
+        <div className="flex gap-2">
+          <button className="btn btn-ghost btn-sm" onClick={() => { setView("story"); window.scrollTo(0, 0); }}>Back to the story</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => window.print()}>Print / PDF</button>
+        </div>
       </header>
       <div className="mx-auto max-w-5xl space-y-5 px-3 sm:px-5">
         {book.pages.map((p, i) => (
