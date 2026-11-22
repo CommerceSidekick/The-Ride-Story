@@ -58,6 +58,7 @@ export default function Home() {
       <div className="topo-layer" aria-hidden />
       <SiteHeader />
 
+      <main>
       {/* Hero */}
       <section className="relative flex min-h-[92svh] items-center">
         <div className="wrap relative pb-16 pt-32">
@@ -280,6 +281,8 @@ export default function Home() {
           </Reveal>
         </div>
       </section>
+
+      </main>
 
       <SiteFooter />
       <PalettePicker />

@@ -19,14 +19,14 @@ export function PublishedTrip({ load, example = false }: { load: () => Promise<T
   }, []);
   const a = useMemo(() => (bundle ? analyze(bundle.trip, bundle.rides, bundle.media) : null), [bundle]);
 
-  if (bundle === undefined) return <div className="grid flex-1 place-items-center bg-loam text-dust">Opening the story…</div>;
+  if (bundle === undefined) return <div className="grid flex-1 place-items-center bg-loam text-[#a8a291]">Opening the story…</div>;
   const book = bundle?.trip.book;
   if (!bundle || !a)
     return (
       <div className="grid flex-1 place-items-center bg-loam p-6 text-center text-bone">
         <div>
-          <p className="font-display text-3xl font-semibold">This story isn&apos;t published</p>
-          <p className="mt-2 text-sm text-dust">The link may be wrong, or the owner unpublished it.</p>
+          <h1 className="font-display text-3xl font-semibold">This story isn&apos;t published</h1>
+          <p className="mt-2 text-sm text-[#a8a291]">The link may be wrong, or the owner unpublished it.</p>
           <Link href="/" className="btn btn-primary mt-5">The Ride Story home</Link>
         </div>
       </div>
