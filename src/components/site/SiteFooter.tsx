@@ -5,15 +5,15 @@ import { SPONSOR } from "@/lib/sponsor";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t border-[#f2eee6]/10 bg-[#0e0f0c]/85 pb-10 pt-16 text-[#f2eee6]">
+    <footer className="border-t border-[var(--bone-s)]/10 bg-[var(--carbon)]/85 pb-10 pt-16 text-[var(--bone-s)]">
       <div className="wrap">
         <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1fr]">
           <div>
             <Logo size={34} />
             <p className="x-muted mt-5 max-w-xs text-[0.95rem]">The ride was epic. We&apos;ll help tell the story.</p>
-            <a href={SPONSOR.url("footer")} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-3 text-[0.8rem] text-[#a8a291] transition hover:text-[#f2eee6]">
+            <a href={SPONSOR.url("footer")} target="_blank" rel="noreferrer" className="mt-8 inline-flex items-center gap-3 text-[0.8rem] text-[var(--dust-s)] transition hover:text-[var(--bone-s)]">
               <span className="x-mono uppercase tracking-[0.14em]">Sponsored by</span>
-              <Image src={SPONSOR.logo} alt={SPONSOR.name} width={649} height={100} className="h-5 w-auto" />
+              <Image src={SPONSOR.logo} alt={SPONSOR.name} width={649} height={100} className="trs-sponsor-logo h-5 w-auto" />
             </a>
           </div>
           {[
@@ -25,14 +25,14 @@ export function SiteFooter() {
               <ul className="mt-4 space-y-2.5 text-[0.95rem]">
                 {(links as string[][]).map(([href, label]) => (
                   <li key={label}>
-                    <Link href={href} className="text-[#f2eee6]/80 transition hover:text-[#ff5a1f]">{label}</Link>
+                    <Link href={href} className="text-[var(--bone-s)]/80 transition hover:text-[var(--flame)]">{label}</Link>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
         </div>
-        <div className="mt-16 flex flex-col gap-3 border-t border-[#f2eee6]/10 pt-6 text-[0.8rem] text-[#a8a291] md:flex-row md:justify-between">
+        <div className="mt-16 flex flex-col gap-3 border-t border-[var(--bone-s)]/10 pt-6 text-[0.8rem] text-[var(--dust-s)] md:flex-row md:justify-between">
           <span>© {new Date().getFullYear()} The Ride Story · theridestory.com</span>
           <span>Strava is a trademark of Strava, Inc. The Ride Story is not affiliated with or endorsed by Strava.</span>
         </div>

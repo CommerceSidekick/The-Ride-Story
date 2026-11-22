@@ -76,7 +76,8 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 
 /* ═════════════════════════ Marketing site (bold, Epoch-family) ═════════════════════════ */
 .site {
-  --carbon: #0e0f0c; --ridge: #1c1e1a; --slate: #2e312b; --bone-s: #f2eee6; --dust-s: #a8a291; --flame: #ff5a1f; --flame-2: #ff8a5c;
+  --carbon: #0e0f0c; --ridge: #1c1e1a; --slate: #2e312b; --bone-s: #f2eee6; --dust-s: #a8a291; --flame: #ff5a1f; --flame-2: #ff8a5c; --on-flame: #0e0f0c;
+  --topo-filter: none;
   background: var(--carbon); color: var(--bone-s);
   font-family: var(--font-barlow), system-ui, sans-serif; font-size: 1.0625rem; line-height: 1.6;
   overflow-x: clip;
@@ -115,7 +116,7 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .site .s-btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 0 24px;
   font-family: var(--font-barlow); font-weight: 600; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; white-space: nowrap;
-  border-radius: 4px; background: var(--flame); color: var(--carbon); border: 1.5px solid var(--flame);
+  border-radius: 4px; background: var(--flame); color: var(--on-flame); border: 1.5px solid var(--flame);
   transition: background 160ms, color 160ms, border-color 160ms, transform 160ms;
 }
 .site .s-btn:hover { background: var(--flame-2); border-color: var(--flame-2); }
@@ -128,9 +129,9 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 
 /* Dark topographic backdrop: faint satellite map under contour lines, fixed behind the page. */
 .site.topo { position: relative; isolation: isolate; background: var(--carbon); }
-.site .topo-layer { position: fixed; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(rgba(14,15,12,0.45), rgba(14,15,12,0.6)), url("/brand/topo-bg.jpg") center / cover no-repeat, var(--carbon); }
-.site .panel { background: rgba(22,24,20,0.78); border: 1px solid rgba(242,238,230,0.09); border-radius: 6px; backdrop-filter: blur(6px); }
-.site .rule { border-color: rgba(242,238,230,0.1); }
+.site .topo-layer { position: fixed; inset: 0; z-index: -1; pointer-events: none; filter: var(--topo-filter); background: linear-gradient(rgba(14,15,12,0.45), rgba(14,15,12,0.6)), url("/brand/topo-bg.jpg") center / cover no-repeat, var(--carbon); }
+.site .panel { background: color-mix(in srgb, var(--ridge) 82%, transparent); border: 1px solid color-mix(in srgb, var(--bone-s) 10%, transparent); border-radius: 6px; backdrop-filter: blur(6px); }
+.site .rule { border-color: color-mix(in srgb, var(--bone-s) 10%, transparent); }
 
 .site .grain::after {
   content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0.07; mix-blend-mode: overlay;
@@ -161,3 +162,11 @@ button:disabled { cursor: not-allowed; opacity: 0.5; }
 .maplibregl-ctrl-attrib a { color: #f2eee6 !important; }
 .maplibregl-ctrl-group { background: rgba(14,15,12,0.75) !important; }
 .maplibregl-ctrl-group button .maplibregl-ctrl-icon { filter: invert(1); }
+
+/* ───────── Palettes (see src/lib/palettes.ts) ───────── */
+html[data-palette="summit"] .site { --carbon: #0f0e0b; --ridge: #1d1b16; --slate: #302c24; --flame: #f2b33d; --flame-2: #ffd07a; --on-flame: #0f0e0b; --topo-filter: sepia(0.35); }
+html[data-palette="glacier"] .site { --carbon: #0a1016; --ridge: #121b24; --slate: #223140; --bone-s: #eef3f6; --dust-s: #8fa3b3; --flame: #7cc8ff; --flame-2: #a9dcff; --on-flame: #0a1016; --topo-filter: sepia(0.4) hue-rotate(170deg) saturate(1.6) brightness(0.95); }
+html[data-palette="signal"] .site { --flame: #d4ff3a; --flame-2: #e4ff7a; --on-flame: #0e0f0c; }
+html[data-palette="clay"] .site { --carbon: #efe9dd; --ridge: #e6dfd1; --slate: #cfc5b2; --bone-s: #1b1a17; --dust-s: #6b6457; --flame: #b5462f; --flame-2: #c9583f; --on-flame: #fbf7f0; --topo-filter: invert(1) hue-rotate(180deg) brightness(1.06) contrast(0.85); }
+html[data-palette="clay"] .site .trs-logo-dark { color: #1b1a17; }
+html[data-palette="clay"] .site .trs-sponsor-logo { filter: brightness(0); opacity: 0.85; }
