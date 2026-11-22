@@ -170,3 +170,5 @@ html[data-palette="signal"] .site { --flame: #d4ff3a; --flame-2: #e4ff7a; --on-f
 html[data-palette="clay"] .site { --carbon: #efe9dd; --ridge: #e6dfd1; --slate: #cfc5b2; --bone-s: #1b1a17; --dust-s: #6b6457; --flame: #b5462f; --flame-2: #c9583f; --on-flame: #fbf7f0; --topo-filter: invert(1) hue-rotate(180deg) brightness(1.06) contrast(0.85); }
 html[data-palette="clay"] .site .trs-logo-dark { color: #1b1a17; }
 html[data-palette="clay"] .site .trs-sponsor-logo { filter: brightness(0); opacity: 0.85; }
+html[data-palette="ember-deep"] .site { --flame: #e4572e; --flame-2: #ef7550; --on-flame: #0e0f0c; }
+html[data-palette="amber"] .site { --flame: #ff8a1f; --flame-2: #ffa752; --on-flame: #0e0f0c; }
