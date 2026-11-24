@@ -7,6 +7,7 @@ import { canvasToJpeg, coverSize, DPI, drawCover, estimateSpine, imagesToPdf, pa
 import type { Book, BookPage, BookSize, Trip } from "@/lib/types";
 import { slugify, uid } from "@/lib/util";
 import { BookPageView } from "./BookPageView";
+import { LuluOrder } from "./LuluOrder";
 
 const THEME_BG = { loam: "#1b1916", paper: "#f5f0e6", agave: "#1f3d35" } as const;
 const THEME_INK = { loam: "#f3eee4", paper: "#1f1c18", agave: "#f2ecdc" } as const;
@@ -69,9 +70,10 @@ export function PrintPanel({ trip, a, book, onSize, publishedUrl }: { trip: Trip
 
   const blank = (): BookPage => ({ id: uid(), type: "photos", photoIds: [] , title: "__blank" });
 
-  const exportInterior = () => run(async () => {
+  /** Full-bleed interior PDF, padded with blank pages to `pageCount`. */
+  const buildInterior = async (pageCount: number) => {
     const pages = [...interior];
-    while (pages.length < totalPages) pages.push(blank());
+    while (pages.length < pageCount) pages.push(blank());
     const canvases = await rasterise(pages, "Rendering pages");
     setJob({ label: "Building interior PDF", done: canvases.length, total: canvases.length });
     const b = preset.bleedIn;
@@ -86,29 +88,31 @@ export function PrintPanel({ trip, a, book, onSize, publishedUrl }: { trip: Trip
       if (pages[i].title !== "__blank") drawCover(ctx, c, 0, 0, wPx, hPx);
       out.push({ jpeg: await canvasToJpeg(bleedC), wIn: size.w + 2 * b, hIn: size.h + 2 * b });
     }
-    download(await imagesToPdf(out, `${trip.name} — interior`), `${name}-interior.pdf`);
-  });
+    return imagesToPdf(out, `${trip.name} — interior`);
+  };
 
-  const exportCover = () => run(async () => {
+  /** Wraparound cover. With `exact` (the printer's cover size), spine and wrap are derived from it. */
+  const buildCover = async (spineWidth: number, wrapIn: number, exact?: { w: number; h: number }) => {
     const front = book.pages.find((p) => p.type === "cover");
     const back = book.pages.find((p) => p.type === "back");
     const pages = [back ?? blank(), front ?? blank()];
     const [backC, frontC] = await rasterise(pages, "Rendering cover");
     setJob({ label: "Building cover PDF", done: 2, total: 2 });
-    const wrap = preset.coverWrapIn;
-    const dims = coverSize(size.w, size.h, spineIn, wrap);
+    const wrap = exact ? (exact.h - size.h) / 2 : wrapIn;
+    const spineW_in = exact ? Math.max(0, exact.w - 2 * (size.w + wrap)) : spineWidth;
+    const dims = exact ?? coverSize(size.w, size.h, spineW_in, wrap);
     const W = Math.round(dims.w * DPI), H = Math.round(dims.h * DPI);
     const c = document.createElement("canvas");
     c.width = W; c.height = H;
     const ctx = c.getContext("2d")!;
     ctx.fillStyle = THEME_BG[theme]; ctx.fillRect(0, 0, W, H);
     const panelW = Math.round((size.w + wrap) * DPI);
-    const spineX = panelW, spineW = Math.round(spineIn * DPI);
+    const spineX = panelW, spineW = Math.round(spineW_in * DPI);
     if (back) drawCover(ctx, backC, 0, 0, panelW, H);
     if (front) drawCover(ctx, frontC, spineX + spineW, 0, W - spineX - spineW, H);
     // Spine: title and place, reading top to bottom.
     ctx.fillStyle = THEME_BG[theme]; ctx.fillRect(spineX, 0, spineW, H);
-    if (spineIn >= 0.25) {
+    if (spineW_in >= 0.25) {
       const probe = document.querySelector(".tb-display");
       const family = probe ? getComputedStyle(probe).fontFamily : "Georgia, serif";
       ctx.save();
@@ -120,8 +124,11 @@ export function PrintPanel({ trip, a, book, onSize, publishedUrl }: { trip: Trip
       ctx.fillText([trip.name, trip.location].filter(Boolean).join("  ·  "), 0, 0, H * 0.8);
       ctx.restore();
     }
-    download(await imagesToPdf([{ jpeg: await canvasToJpeg(c), wIn: dims.w, hIn: dims.h }], `${trip.name} — cover`), `${name}-cover.pdf`);
-  });
+    return imagesToPdf([{ jpeg: await canvasToJpeg(c), wIn: dims.w, hIn: dims.h }], `${trip.name} — cover`);
+  };
+
+  const exportInterior = () => run(async () => download(await buildInterior(totalPages), `${name}-interior.pdf`));
+  const exportCover = () => run(async () => download(await buildCover(spineIn, preset.coverWrapIn), `${name}-cover.pdf`));
 
   const exportImages = () => run(async () => {
     const pages = book.pages;
@@ -176,6 +183,21 @@ export function PrintPanel({ trip, a, book, onSize, publishedUrl }: { trip: Trip
       <p className="mt-3 text-[11px] leading-relaxed text-dust">
         {preset.notes} <a className="underline" href={preset.url} target="_blank" rel="noreferrer">Open {preset.name.split(" —")[0]}</a>. Vistaprint&apos;s photo books are made in its own editor, so use the page images there.
       </p>
+
+      <LuluOrder
+        trip={trip}
+        size={book.config.size}
+        interiorPages={interior.length}
+        busy={!!job}
+        onSize={onSize}
+        onBusy={(label) => setJob(label ? { label, done: 0, total: 1 } : null)}
+        build={async (pageCount, cover) => {
+          const interiorPdf = await buildInterior(pageCount);
+          const coverPdf = await buildCover(0, 0, cover);
+          setRenderPages(null);
+          return { interior: interiorPdf, cover: coverPdf };
+        }}
+      />
 
       {/* Offscreen render target for print rasterising */}
       <div ref={host} aria-hidden style={{ position: "fixed", left: -20000, top: 0, width: RENDER_W, pointerEvents: "none" }}>

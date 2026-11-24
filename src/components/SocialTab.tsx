@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { leaveOnClick } from "@/lib/pending-save";
 import { buildSocial, DEFAULT_SOCIAL, FORMATS } from "@/lib/book";
 import type { Post, Slide, SocialConfig, SocialSet } from "@/lib/types";
 import { cx, slugify } from "@/lib/util";
@@ -7,6 +8,9 @@ import { THEMES, TONES } from "./BookTab";
 import type { Workspace } from "./CollectTab";
 import { PhotoPicker } from "./PhotoPicker";
 import { SlideView } from "./SlideView";
+import { useConnections } from "./connect/useConnections";
+
+const MAX_API_IMAGES = 10;
 
 export function SocialTab({ ws }: { ws: Workspace }) {
   const { trip, a, updateTrip } = ws;
@@ -15,6 +19,11 @@ export function SocialTab({ ws }: { ws: Workspace }) {
   const [picker, setPicker] = useState<{ postId: string; slideId: string } | null>(null);
   const [busy, setBusy] = useState("");
   const [note, setNote] = useState("");
+  const [posted, setPosted] = useState<{ name: string; url?: string } | null>(null);
+  const [pageId, setPageId] = useState("");
+  const conn = useConnections();
+  const social = (conn.providers ?? []).filter((p) => p.kind === "social" && p.configured);
+  const returnTo = `/app/trip/${trip.id}?tab=social`;
   const nodes = useRef(new Map<string, HTMLDivElement>());
   const hasContent = ws.rides.length + ws.media.length > 0;
 
@@ -39,6 +48,31 @@ export function SocialTab({ ws }: { ws: Workspace }) {
     if (!blob) throw new Error("Could not render the image");
     return blob;
   };
+  /** Instagram only accepts JPEG. */
+  const renderJpeg = async (post: Post, slide: Slide): Promise<Blob> => {
+    const node = nodes.current.get(slide.id);
+    if (!node) throw new Error("Slide is not on screen");
+    const { toCanvas } = await import("html-to-image");
+    const c = await toCanvas(node, { pixelRatio: FORMATS[post.format].w / node.offsetWidth, cacheBust: false });
+    return new Promise((res, rej) => c.toBlob((b) => (b ? res(b) : rej(new Error("Could not render the image"))), "image/jpeg", 0.92));
+  };
+  const publish = (post: Post, providerId: string) => run(post.id, async () => {
+    const p = social.find((x) => x.id === providerId);
+    if (!p) return;
+    const page = p.targets?.find((t) => t.id === pageId) ?? p.targets?.[0];
+    if (!confirm(`Post ${post.slides.length} ${post.slides.length === 1 ? "image" : "images"} to ${p.name}${page ? ` (${page.name})` : ` as ${p.account}`} now?`)) return;
+    setPosted(null);
+    const { upload } = await import("@vercel/blob/client");
+    const images: string[] = [];
+    for (const [i, s] of post.slides.entries()) {
+      const b = await upload(`social/${slugify(trip.name) || "ride"}-${i + 1}.jpg`, await renderJpeg(post, s), { access: "public", handleUploadUrl: "/api/upload", contentType: "image/jpeg" });
+      images.push(b.url);
+    }
+    const r = await fetch(`/api/connect/${p.id}/publish`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ images, caption: post.caption, target: page?.id }) });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.error ?? `Posting to ${p.name} failed`);
+    setPosted({ name: p.name, url: d.url });
+  });
   const fileName = (post: Post, i: number) => `${slugify(trip.name)}-${slugify(post.label)}-${post.format}-${String(i + 1).padStart(2, "0")}.png`;
   const download = (blob: Blob, name: string) => {
     const url = URL.createObjectURL(blob);
@@ -113,11 +147,33 @@ export function SocialTab({ ws }: { ws: Workspace }) {
           <div className="mt-1 text-sm text-dust">{set.posts.length} posts · {set.posts.reduce((n, p) => n + p.slides.length, 0)} images</div>
           <div className="mt-4">{settings}</div>
           <button className="btn btn-ghost mt-4 w-full justify-center" onClick={generate}>Rebuild from settings</button>
-          <p className="mt-3 text-xs leading-relaxed text-dust">The Ride Story makes the images and captions; you post them. On a phone, <b>Share</b> hands the images to Instagram or Facebook and copies the caption.</p>
+          <p className="mt-3 text-xs leading-relaxed text-dust">{social.length ? <><b>Post to</b> publishes straight to your Instagram professional account or Facebook Page. </> : null}On a phone, <b>Share</b> hands the images to Instagram or Facebook and copies the caption.</p>
         </div>
       </aside>
       <div className="min-w-0 space-y-6">
         {note && <p className="rounded-lg bg-clay/10 px-4 py-2 text-sm text-clay">{note}</p>}
+        {posted && (
+          <p className="rounded-lg bg-agave/10 px-4 py-2 text-sm text-agave">
+            Posted to {posted.name}.{posted.url && <> <a className="font-semibold underline" href={posted.url} target="_blank" rel="noreferrer">View the post</a></>}
+          </p>
+        )}
+        {social.some((p) => p.connected || conn.message(p)) && (
+          <div className="card flex flex-wrap items-center gap-x-4 gap-y-2 p-4 text-sm">
+            {social.map((p) => (
+              <span key={p.id} className="flex flex-wrap items-center gap-2">
+                <b>{p.name}</b>
+                {p.connected ? <span className="text-dust">{p.account}</span> : <span className="text-dust">{conn.message(p) || "not connected"}</span>}
+                {p.connected && p.targets && p.targets.length > 1 && (
+                  <select className="field !w-auto !py-1" value={pageId || p.targets[0].id} onChange={(e) => setPageId(e.target.value)} aria-label="Facebook Page to post to">
+                    {p.targets.map((t) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                  </select>
+                )}
+                {p.connected && p.targets?.length === 1 && <span className="text-dust">→ {p.targets[0].name}</span>}
+                {p.connected && <button className="text-xs underline" onClick={() => conn.disconnect(p.id)}>Disconnect</button>}
+              </span>
+            ))}
+          </div>
+        )}
         {set.posts.map((post) => {
           const f = FORMATS[post.format];
           return (
@@ -126,7 +182,18 @@ export function SocialTab({ ws }: { ws: Workspace }) {
                 <h3 className="font-display text-xl font-semibold">{post.label}</h3>
                 <span className="rounded-full bg-bone-2 px-2.5 py-0.5 text-xs font-semibold">{f.label}</span>
                 <span className="font-mono text-xs text-dust">{f.w}×{f.h} · {post.slides.length} images</span>
-                <div className="ml-auto flex gap-2">
+                <div className="ml-auto flex flex-wrap gap-2">
+                  {social.map((p) => {
+                    const fits = post.format !== "ig-story"; // Stories can only be posted one frame at a time; use Share.
+                    if (!fits) return null;
+                    if (!p.connected) return <a key={p.id} className="btn btn-ghost btn-sm" href={conn.connectUrl(p.id, returnTo)} onClick={leaveOnClick}>Connect {p.name}</a>;
+                    const tooMany = post.slides.length > MAX_API_IMAGES;
+                    return (
+                      <button key={p.id} className="btn btn-primary btn-sm" onClick={() => publish(post, p.id)} disabled={!!busy || tooMany} title={tooMany ? `${p.name} takes up to ${MAX_API_IMAGES} images per post` : undefined}>
+                        {busy === post.id ? "Posting…" : `Post to ${p.name}`}
+                      </button>
+                    );
+                  })}
                   <button className="btn btn-ghost btn-sm" onClick={() => sharePost(post)} disabled={!!busy}>Share</button>
                   <button className="btn btn-dark btn-sm" onClick={() => downloadPost(post)} disabled={!!busy}>{busy === post.id ? "Rendering…" : "Download all"}</button>
                 </div>

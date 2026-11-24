@@ -1,5 +1,6 @@
 "use client";
 import { useCallback, useEffect, useState } from "react";
+import { leaveOnClick } from "@/lib/pending-save";
 import type { Ride, Units } from "@/lib/types";
 import { dayKeyToMs, fmtDist, fmtDuration, fmtEle } from "@/lib/util";
 
@@ -79,7 +80,7 @@ export function StravaPanel({ startDate, endDate, rides, units, onReturn }: { st
       {!status.connected ? (
         <div className="mt-4">
           <p className="max-w-xl text-sm text-loam/80">Connect Strava to find the rides you recorded on this trip. Then export each one to add it here.</p>
-          <a href={`/api/strava/connect?return=${encodeURIComponent(onReturn)}`} className="mt-3 inline-block" aria-label="Connect with Strava">
+          <a href={`/api/strava/connect?return=${encodeURIComponent(onReturn)}`} className="mt-3 inline-block" aria-label="Connect with Strava" onClick={leaveOnClick}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/strava/btn_strava_connect_with_orange.svg" alt="Connect with Strava" width={237} height={48} />
           </a>
