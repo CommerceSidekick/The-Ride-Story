@@ -1,4 +1,5 @@
 "use client";
+import { registerFlush } from "@/lib/pending-save";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
@@ -81,7 +82,13 @@ function TripWorkspace() {
   }, [flush]);
 
   // Don't lose the last half-second of edits when leaving the page.
-  useEffect(() => () => { if (timer.current) { clearTimeout(timer.current); flush(); } }, [flush]);
+  useEffect(() => {
+    const now = () => { if (timer.current) { clearTimeout(timer.current); timer.current = null; return flush(); } return Promise.resolve(); };
+    registerFlush(now);
+    // Full-page navigations (e.g. connecting an app) don't unmount React, so also save on pagehide.
+    window.addEventListener("pagehide", now);
+    return () => { registerFlush(null); window.removeEventListener("pagehide", now); now(); };
+  }, [flush]);
 
   const a = useMemo(() => (trip ? analyze(trip, rides, media) : null), [trip, rides, media]);
 

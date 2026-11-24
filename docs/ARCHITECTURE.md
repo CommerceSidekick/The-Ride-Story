@@ -106,6 +106,9 @@ There are **no autonomous AI agents** in the product. Everything is deterministi
 | Route | Purpose |
 |---|---|
 | `/api/strava/connect`, `/callback`, `/status`, `/activities`, `/disconnect` | Strava sign-in (OAuth), with the token kept in an encrypted, browser-inaccessible (httpOnly) cookie. Lists the rider's own rides, shown only to them and never stored. Disconnecting revokes access on Strava. |
+| `/api/connect/<app>/start`, `/callback`, `/rides`, `/rides/<id>`, `/publish`, `/disconnect`, `/api/connect/status` | Wahoo, Polar, Ride with GPS (import rides) and Instagram, Facebook Pages (post). Tokens live in an encrypted httpOnly cookie in the rider's browser. See `docs/INTEGRATIONS.md`. |
+| `/api/upload` | Short-lived upload tokens for Vercel Blob: post images (1-day expiry) and print PDFs (30 days). |
+| `/api/order/config`, `/quote`, `/cover`, `/validate`, `/checkout`, `/webhook` | Printed books: Lulu quote, exact cover size and file check, Stripe Checkout, then the Stripe webhook creates the Lulu print job. |
 | `/api/narrate` | Optional AI rewrite of book text. Accepts only requests from this site, up to 120 KB. |
 | `/robots.txt`, `/sitemap.xml` | Search engines. The app and private pages are excluded. |
 
@@ -132,6 +135,7 @@ If agents are wanted later, good candidates are:
 | `NEXT_PUBLIC_SITE_URL` | Canonical URL for share previews and the sitemap (e.g. `https://theridestory.com`) |
 | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Cloud mode: accounts, crew invites, shareable links |
 | `STRAVA_CLIENT_ID`, `STRAVA_CLIENT_SECRET` (+ optional `STRAVA_TOKEN_SECRET`) | Connect with Strava |
+| `TOKEN_SECRET`, `WAHOO_*`, `POLAR_*`, `RWGPS_*`, `INSTAGRAM_*`, `FACEBOOK_*`, `BLOB_READ_WRITE_TOKEN`, `LULU_*`, `STRIPE_*` | Ride apps, posting and book ordering: see `docs/INTEGRATIONS.md` |
 | `ANTHROPIC_API_KEY` | AI rewrite in the Book tab |
 
 The live palette is set by `DEFAULT_PALETTE` in `src/lib/palettes.ts`.
@@ -149,8 +153,8 @@ All three are free and need no key. They are credited on the map and in printed 
 
 ## Known gaps
 
-- **Payments:** there is no checkout for the $25 book.
-- **Printer ordering:** files are exported, but orders aren't sent to a printer's API.
+- **Payments and printing** are built (Lulu + Stripe) but switched off until their keys are set. See `docs/INTEGRATIONS.md`.
+- **Garmin, COROS and Suunto** need business applications; Garmin's push model also needs Supabase.
 - **Free-tier limits:** the limit isn't defined or enforced yet.
 - **Legal pages:** privacy policy and terms are still needed, and Strava's review asks for them.
 - **Moto photos:** the Moto section uses a 3D render until real moto photos are added.

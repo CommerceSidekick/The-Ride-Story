@@ -5,6 +5,7 @@ import { dayTitle } from "@/lib/copy";
 import { importFiles, offsetFromLon } from "@/lib/ingest";
 import { cloudEnabled, store } from "@/lib/store";
 import { StravaPanel } from "./StravaPanel";
+import { RideSourcesPanel } from "./connect/RideSourcesPanel";
 import type { Media, Ride, Trip } from "@/lib/types";
 import { RIDER_COLORS, cx, fmtDate, fmtDist, fmtDuration, fmtEle, fmtTime, uid } from "@/lib/util";
 
@@ -135,6 +136,14 @@ export function CollectTab({ ws }: { ws: Workspace }) {
           rides={ws.rides}
           units={trip.units}
           onReturn={`/app/trip/${trip.id}?tab=collect`}
+        />
+        <RideSourcesPanel
+          startDate={a.startDate}
+          endDate={a.endDate}
+          rides={ws.rides}
+          units={trip.units}
+          onReturn={`/app/trip/${trip.id}?tab=collect`}
+          onFiles={async (files) => { await onFiles(files); }}
         />
 
         {empty && (
