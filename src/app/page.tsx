@@ -49,11 +49,11 @@ const FAQ = [
   ["Do I need Strava?", "No. Strava makes it quicker, but any GPX, FIT or TCX file works, from any bike computer, watch or moto GPS."],
   ["Who owns my photos?", "You do. We use them to build your story and nothing else."],
   ["Can my whole crew add photos?", "Yes. Send one invite link and everyone adds their own rides and photos from their own phone."],
-  ["What does the book cost?", "$25 a copy plus shipping. Your first story is free."],
+  ["What does the book cost?", "From $25 a copy plus shipping, depending on page count. Your first story is free."],
   ["What happens to a free story after 90 days?", "It goes offline, but you can still download the posts and book files. Upgrade to Your Story any time to keep it online."],
 ];
 
-type Plan = { name: string; blurb: string; price: string; unit?: string; items: string[]; cta: string; href: string; featured?: boolean };
+type Plan = { name: string; blurb: string; price: string; from?: boolean; unit?: string; items: string[]; cta: string; href: string; featured?: boolean };
 
 const PLANS: Plan[] = [
   {
@@ -62,7 +62,7 @@ const PLANS: Plan[] = [
     cta: "Start free", href: "/app", featured: true,
   },
   {
-    name: "The Book", blurb: "Put it on a shelf.", price: "$25", unit: "per copy",
+    name: "The Book", blurb: "Put it on a shelf.", price: "$25", from: true, unit: "per copy",
     items: ["Full-colour printed photo book", "Your maps, photos and words", "One for every rider in the crew", "Shipping extra"],
     cta: "Make a book", href: "/app",
   },
@@ -238,9 +238,10 @@ export default function Home() {
               <Reveal key={p.name} delay={i * 80} className={`panel flex flex-col p-7 ${p.featured ? "border-[var(--flame)]/60" : ""}`}>
                 <h3 className="x-h3">{p.name}</h3>
                 <p className="x-muted mt-1 min-h-[2.8em] text-[0.92rem]">{p.blurb}</p>
-                <div className="mt-4 flex items-baseline gap-2">
+                <div className="relative mt-4 flex items-baseline gap-2">
+                  {p.from && <span className="x-mono absolute -top-4 left-0 text-[0.68rem] uppercase tracking-[0.16em] text-[var(--dust-s)]">From</span>}
                   <span className={`font-[family-name:var(--font-archivo)] font-black leading-none [font-stretch:125%] ${p.price.length > 4 ? "text-[2.2rem]" : "text-[3.2rem]"}`}>{p.price}</span>
-                  {p.unit && <span className="text-[var(--dust-s)]">{p.unit}</span>}
+                  {p.unit && <span className="whitespace-nowrap text-[var(--dust-s)]">{p.unit}</span>}
                 </div>
                 <ul className="mt-6 flex-1 space-y-2.5 text-[0.96rem]">
                   {p.items.map((x) => <Li key={x}>{x}</Li>)}
